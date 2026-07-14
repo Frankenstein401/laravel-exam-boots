@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\{{ModelName}}Request;
+use App\Http\Resources\{{ModelName}}Resource;
+use App\Services\{{ModelName}}Service;
+use Illuminate\Http\JsonResponse;
+
+class {{ModelName}}Controller extends Controller
+{
+    public function __construct(
+        private readonly {{ModelName}}Service ${{modelNameLower}}Service,
+    ) {
+        {{authMiddleware}}
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): JsonResponse
+    {
+        ${{modelNameLower}}s = $this->{{modelNameLower}}Service->getAll();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => {{ModelName}}Resource::collection(${{modelNameLower}}s),
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id): JsonResponse
+    {
+        ${{modelNameLower}} = $this->{{modelNameLower}}Service->getById($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => new {{ModelName}}Resource(${{modelNameLower}}),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ModelName}}Request $request): JsonResponse
+    {
+        ${{modelNameLower}} = $this->{{modelNameLower}}Service->create($request->validated());
+
+        return response()->json([
+            'status' => 'success',
+            'data' => new {{ModelName}}Resource(${{modelNameLower}}),
+        ], 201);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ModelName}}Request $request, $id): JsonResponse
+    {
+        ${{modelNameLower}} = $this->{{modelNameLower}}Service->update($id, $request->validated());
+
+        return response()->json([
+            'status' => 'success',
+            'data' => new {{ModelName}}Resource(${{modelNameLower}}),
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id): JsonResponse
+    {
+        $this->{{modelNameLower}}Service->delete($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => null,
+        ]);
+    }
+}

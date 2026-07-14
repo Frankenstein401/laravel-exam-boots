@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\{{ModelName}}Request;
+use App\Http\Resources\{{ModelName}}Resource;
+use App\Services\{{ModelName}}Service;
+use Illuminate\Http\JsonResponse;
+
+class {{ModelName}}Controller extends Controller
+{
+    public function __construct(
+        private readonly {{ModelName}}Service ${{modelNameLower}}Service,
+    ) {
+        {{authMiddleware}}
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(): JsonResponse
+    {
+        // TODO: Implement index logic
+        return response()->json([
+            'status' => 'success',
+            'data' => [],
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id): JsonResponse
+    {
+        // TODO: Implement show logic
+        return response()->json([
+            'status' => 'success',
+            'data' => null,
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store({{ModelName}}Request $request): JsonResponse
+    {
+        // TODO: Implement store logic
+        return response()->json([
+            'status' => 'success',
+            'data' => null,
+        ], 201);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update({{ModelName}}Request $request, $id): JsonResponse
+    {
+        // TODO: Implement update logic
+        return response()->json([
+            'status' => 'success',
+            'data' => null,
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id): JsonResponse
+    {
+        // TODO: Implement destroy logic
+        return response()->json([
+            'status' => 'success',
+            'data' => null,
+        ]);
+    }
+}

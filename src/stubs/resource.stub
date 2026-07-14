@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class {{ModelName}}Resource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * Customize this method to control the JSON structure, for example:
+     *   return [
+     *       'id' => $this->id,
+     *       'name' => $this->name,
+     *       'created_at' => $this->created_at->toDateTimeString(),
+     *   ];
+     */
+    public function toArray(Request $request): array
+    {
+        return $this->resource->toArray();
+    }
+}

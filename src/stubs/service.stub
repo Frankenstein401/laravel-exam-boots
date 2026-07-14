@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\{{ModelName}};
+
+readonly class {{ModelName}}Service
+{
+    /**
+     * Get all {{modelNameLower}} records.
+     */
+    public function getAll()
+    {
+        return {{ModelName}}::all();
+    }
+
+    /**
+     * Get a single {{modelNameLower}} by ID.
+     */
+    public function getById($id)
+    {
+        return {{ModelName}}::findOrFail($id);
+    }
+
+    /**
+     * Create a new {{modelNameLower}} record.
+     */
+    public function create(array $data)
+    {
+        return {{ModelName}}::create($data);
+    }
+
+    /**
+     * Update an existing {{modelNameLower}} record.
+     */
+    public function update($id, array $data)
+    {
+        ${{modelNameLower}} = {{ModelName}}::findOrFail($id);
+        ${{modelNameLower}}->update($data);
+
+        return ${{modelNameLower}}->fresh();
+    }
+
+    /**
+     * Delete a {{modelNameLower}} record.
+     */
+    public function delete($id): bool
+    {
+        ${{modelNameLower}} = {{ModelName}}::findOrFail($id);
+
+        return ${{modelNameLower}}->delete();
+    }
+}
