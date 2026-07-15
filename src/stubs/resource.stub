@@ -9,16 +9,14 @@ class {{ModelName}}Resource extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
-     * Customize this method to control the JSON structure, for example:
-     *   return [
-     *       'id' => $this->id,
-     *       'name' => $this->name,
-     *       'created_at' => $this->created_at->toDateTimeString(),
-     *   ];
      */
     public function toArray(Request $request): array
     {
-        return $this->resource->toArray();
+        return array_merge(
+            $this->resource->toArray(),
+            [
+                {{resourceExtra}}
+            ]
+        );
     }
 }

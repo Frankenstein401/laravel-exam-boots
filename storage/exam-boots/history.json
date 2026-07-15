@@ -1,0 +1,66 @@
+[
+    {
+        "id": "a02dc8b1-51df-4c20-9d0d-cb91f66298d4",
+        "command": "exam:seed-admin",
+        "timestamp": "2026-07-15T07:14:42+00:00",
+        "operations": [
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\database\\seeders\/AdminUserSeeder.php"
+            },
+            {
+                "action": "modify",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\database\\seeders\/DatabaseSeeder.php",
+                "backup": "D:\\project-laravel\\laravel-exam-boots\\storage\\exam-boots\/backups\/20260715_071442\/D__project-laravel_laravel-exam-boots_database_seeders_DatabaseSeeder.php.bak"
+            }
+        ]
+    },
+    {
+        "id": "1b236d14-52fe-40cb-bab8-159589ed2fd4",
+        "command": "exam:add TestProduct",
+        "timestamp": "2026-07-15T07:14:42+00:00",
+        "operations": [
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\app\\Models\/TestProduct.php"
+            },
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\database\\migrations\/2026_07_15_071442_create_test_products_table.php"
+            },
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\app\\Http\/Controllers\/TestProductController.php"
+            },
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\app\\Services\/TestProductService.php"
+            },
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\app\\Http\/Requests\/TestProductRequest.php"
+            },
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\app\\Http\/Resources\/TestProductResource.php"
+            },
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\app\\Enums\/Status.php"
+            },
+            {
+                "action": "modify",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\app\\Models\/Category.php",
+                "backup": "D:\\project-laravel\\laravel-exam-boots\\storage\\exam-boots\/backups\/20260715_071442\/D__project-laravel_laravel-exam-boots_app_Models_Category.php.bak"
+            },
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\database\\factories\/TestProductFactory.php"
+            },
+            {
+                "action": "create",
+                "path": "D:\\project-laravel\\laravel-exam-boots\\database\\seeders\/TestProductSeeder.php"
+            }
+        ]
+    }
+]

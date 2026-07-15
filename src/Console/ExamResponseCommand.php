@@ -6,11 +6,10 @@ namespace NamaKamu\LaravelExamBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
 
 /**
- * Artisan command to generate the ApiResponse trait.
- *
- * Generates app/Traits/ApiResponse.php to handle standardized API response structures.
+ * Artisan command to generate standard API response helper trait.
  *
  * Usage: php artisan exam:response
  *
@@ -18,72 +17,79 @@ use Illuminate\Support\Facades\File;
  */
 class ExamResponseCommand extends Command
 {
+    use TracksFileOperations;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'exam:response';
+    protected $signature = 'exam:response 
+                            {--dry-run : Preview operations without writing files}
+                            {--force : Force overwrite existing files}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generate API response trait helper for success and error JSON responses';
+    protected $description = 'Generate API response helper Trait (app/Traits/ApiResponse.php)';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $this->components->info('📄 Laravel Exam Boots — Response Trait Generator');
+        $this->components->info('📄 Laravel Exam Boots — API Response Trait Setup');
         $this->newLine();
 
         $targetPath = app_path('Traits/ApiResponse.php');
         $stubPath = __DIR__ . '/../stubs/api-response-trait.stub';
 
         if (! File::exists($stubPath)) {
-            $this->components->error('Stub untuk ApiResponse trait tidak ditemukan!');
+            $this->components->error("Stub response trait tidak ditemukan di: {$stubPath}");
             return self::FAILURE;
         }
 
         if (File::exists($targetPath)) {
-            $overwrite = $this->confirm(
-                'File app/Traits/ApiResponse.php sudah ada, apakah ingin menimpa (overwrite)?',
-                false
-            );
-
-            if (! $overwrite) {
-                $this->components->warn('Pembuatan trait dibatalkan.');
+            if (! $this->confirmOverwrite($targetPath)) {
+                $this->components->warn('Proses dibatalkan.');
                 return self::SUCCESS;
             }
         }
 
-        // Ensure directory exists
-        File::ensureDirectoryExists(dirname($targetPath));
+        $content = File::get($stubPath);
+        
+        $created = false;
+        if ($this->writeFile($targetPath, $content)) {
+            $created = true;
+        }
 
-        // Copy stub to target path
-        File::put($targetPath, File::get($stubPath));
+        // Persist operation log for exam:undo
+        if (! $this->option('dry-run')) {
+            $this->persistOperationLog('exam:response');
+        }
 
-        $this->components->info('ApiResponse trait berhasil dibuat di: app/Traits/ApiResponse.php');
-        $this->newLine();
+        // --- Summary Output ---
+        $results = [
+            [
+                'Component' => 'ApiResponse Trait',
+                'File'      => $targetPath,
+                'Status'    => $created ? '✅ Created' : '⏭️ Preview / Skipped',
+            ]
+        ];
 
-        $this->info('Cara penggunaan:');
-        $this->info('   1. Import trait di Controller Anda:');
-        $this->info('      use App\Traits\ApiResponse;');
         $this->newLine();
-        $this->info('   2. Gunakan trait di dalam kelas Controller:');
-        $this->info('      use ApiResponse;');
+        $this->table(['Component', 'File', 'Status'], $results);
+
         $this->newLine();
-        $this->info('   3. Panggil method helper:');
-        $this->info('      // Success Response (data, message, status code)');
-        $this->info('      return $this->successResponse($products, "Data fetched successfully", 200);');
-        $this->info('      return $this->successResponse(); // Semua parameter opsional/bisa dikosongi');
+        $this->components->info('🚀 API Response Trait setup complete!');
         $this->newLine();
-        $this->info('      // Error Response (message, status code, data/errors)');
-        $this->info('      return $this->errorResponse("Unauthorized access", 401);');
-        $this->info('      return $this->errorResponse(); // Menggunakan default message ("Terjadi kesalahan") & code 400');
+        $this->components->warn('Cara Penggunaan:');
+        $this->info('   1. Tambahkan ke Controller: use \\App\\Traits\\ApiResponse;');
+        $this->info('   2. Di dalam class Controller: use ApiResponse;');
+        $this->info('   3. Return sukses: return $this->successResponse($data, "Pesan sukses");');
+        $this->info('   4. Return error: return $this->errorResponse("Pesan error", 400);');
 
         return self::SUCCESS;
     }

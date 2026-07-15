@@ -1,0 +1,72 @@
+<?php
+
+use App\Models\{{ModelName}};
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    $this->user = User::factory()->create();
+});
+
+it('can list all {{tableName}}', function () {
+    {{ModelName}}::factory(3)->create();
+
+    $this->actingAs($this->user)
+        ->getJson('/api/{{tableName}}')
+        ->assertOk()
+        ->assertJsonStructure([
+            'status',
+            'data',
+            'meta' => ['current_page', 'last_page', 'per_page', 'total'],
+        ]);
+});
+
+it('can create a {{modelNameLower}}', function () {
+    $data = [
+        // TODO: Tambahkan field data di sini
+    ];
+
+    $this->actingAs($this->user)
+        ->postJson('/api/{{tableName}}', $data)
+        ->assertCreated()
+        ->assertJsonPath('status', 'success');
+});
+
+it('can show a {{modelNameLower}}', function () {
+    ${{modelNameLower}} = {{ModelName}}::factory()->create();
+
+    $this->actingAs($this->user)
+        ->getJson("/api/{{tableName}}/{${{modelNameLower}}->id}")
+        ->assertOk()
+        ->assertJsonPath('status', 'success');
+});
+
+it('can update a {{modelNameLower}}', function () {
+    ${{modelNameLower}} = {{ModelName}}::factory()->create();
+
+    $data = [
+        // TODO: Tambahkan field update di sini
+    ];
+
+    $this->actingAs($this->user)
+        ->putJson("/api/{{tableName}}/{${{modelNameLower}}->id}", $data)
+        ->assertOk()
+        ->assertJsonPath('status', 'success');
+});
+
+it('can delete a {{modelNameLower}}', function () {
+    ${{modelNameLower}} = {{ModelName}}::factory()->create();
+
+    $this->actingAs($this->user)
+        ->deleteJson("/api/{{tableName}}/{${{modelNameLower}}->id}")
+        ->assertOk();
+
+    $this->assertDatabaseMissing('{{tableName}}', ['id' => ${{modelNameLower}}->id]);
+});
+
+it('blocks unauthenticated access to {{tableName}}', function () {
+    $this->getJson('/api/{{tableName}}')
+        ->assertUnauthorized();
+});

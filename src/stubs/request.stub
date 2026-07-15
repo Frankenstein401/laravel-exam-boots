@@ -16,15 +16,11 @@ class {{ModelName}}Request extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * Add your validation rules here, for example:
-     *   'name' => ['required', 'string', 'max:255'],
-     *   'email' => ['required', 'email', 'unique:{{modelNameLower}}s'],
      */
     public function rules(): array
     {
         return [
-            //
+            {{rules}}
         ];
     }
 }

@@ -7,43 +7,49 @@ use App\Models\{{ModelName}};
 readonly class {{ModelName}}Service
 {
     /**
-     * Get all {{modelNameLower}} records.
+     * Get all {{modelNameLower}} records with filter, search, sort, and pagination.
+     *
+     * Supports: filter[], search, sort_by, sort_order, per_page
      */
-    public function getAll()
+    public function getAll{{ModelName}}(array $filters = [])
     {
-        // TODO: Implement getAll logic
+        // TODO: Implement query with filter/search/sort/paginate
+        // $query = {{ModelName}}::query();
+        // if (!empty($filters['search'])) { $query->where('name', 'LIKE', "%{$filters['search']}%"); }
+        // return $query->orderBy($filters['sort_by'] ?? 'created_at', $filters['sort_order'] ?? 'desc')
+        //              ->paginate($filters['per_page'] ?? 15);
     }
 
     /**
      * Get a single {{modelNameLower}} by ID.
      */
-    public function getById($id)
+    public function getDetail{{ModelName}}($id)
     {
-        // TODO: Implement getById logic
+        // TODO: Implement getDetail{{ModelName}} logic
     }
 
     /**
      * Create a new {{modelNameLower}} record.
      */
-    public function create(array $data)
+    public function create{{ModelName}}(array $data)
     {
-        // TODO: Implement create logic
+        // TODO: Implement create{{ModelName}} logic
     }
 
     /**
      * Update an existing {{modelNameLower}} record.
      */
-    public function update($id, array $data)
+    public function update{{ModelName}}($id, array $data)
     {
-        // TODO: Implement update logic
+        // TODO: Implement update{{ModelName}} logic
     }
 
     /**
      * Delete a {{modelNameLower}} record.
      */
-    public function delete($id): bool
+    public function delete{{ModelName}}($id): bool
     {
-        // TODO: Implement delete logic
+        // TODO: Implement delete{{ModelName}} logic
         return false;
     }
 }

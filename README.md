@@ -25,7 +25,7 @@ Mengadopsi filosofi **shadcn/ui**: bukan library blackbox, melainkan menyuntikka
 - [Arsitektur](#-arsitektur)
 - [Kustomisasi](#-kustomisasi)
 - [Setelah Generate: Langkah Selanjutnya](#-setelah-generate-langkah-selanjutnya)
-- [FAQ & Troubleshooting](#-faq--troubleshooting)
+- [FAQ &amp; Troubleshooting](#-faq--troubleshooting)
 - [Contributing](#-contributing)
 - [Lisensi](#-lisensi)
 
@@ -37,22 +37,22 @@ Mengadopsi filosofi **shadcn/ui**: bukan library blackbox, melainkan menyuntikka
 
 ### Kenapa Package Ini?
 
-| Tanpa Exam Boots | Dengan Exam Boots |
-|---|---|
-| Buat Model, Migration, Controller, Service, Request, Resource manual ~25 menit | ✅ Generate 6 file sekaligus dalam **< 10 detik** |
-| Setup JWT/Sanctum auth + route + controller manual ~30 menit | ✅ Setup sistem autentikasi lengkap dengan **`php artisan exam:auth`** |
-| Copy-paste boilerplate rawan typo | ✅ Template terstandarisasi, zero typo |
-| Struktur folder inconsistent | ✅ Arsitektur Controller-Service-Resource konsisten |
+| Tanpa Exam Boots                                                               | Dengan Exam Boots                                                       |
+| ------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| Buat Model, Migration, Controller, Service, Request, Resource manual ~25 menit | ✅ Generate 6 file sekaligus dalam**< 10 detik**                        |
+| Setup JWT/Sanctum auth + route + controller manual ~30 menit                   | ✅ Setup sistem autentikasi lengkap dengan**`php artisan exam:auth`** |
+| Copy-paste boilerplate rawan typo                                              | ✅ Template terstandarisasi, zero typo                                  |
+| Struktur folder inconsistent                                                   | ✅ Arsitektur Controller-Service-Resource konsisten                     |
 
 ---
 
 ## 📋 Requirements
 
-| Requirement | Versi |
-|---|---|
-| PHP | `^8.3` (menggunakan `readonly class` dari PHP 8.2+) |
-| Laravel | `^13.x` (latest) |
-| Composer | `^2.9.5` |
+| Requirement | Versi                                                   |
+| ----------- | ------------------------------------------------------- |
+| PHP         | `^8.3` (menggunakan `readonly class` dari PHP 8.2+) |
+| Laravel     | `^13.x` (latest)                                      |
+| Composer    | `^2.9.5`                                              |
 
 ---
 
@@ -75,6 +75,7 @@ php artisan list | grep exam
 ```
 
 Output yang diharapkan:
+
 ```
 exam:add    Generate CRUD boilerplate components (Model, Migration, Controller, Service, Request, Resource)
 exam:auth   Setup authentication system (JWT / Sanctum) with Login, Register, Logout
@@ -84,16 +85,25 @@ exam:auth   Setup authentication system (JWT / Sanctum) with Login, Register, Lo
 
 ## ✨ Fitur Utama
 
-1. **Full-Boilerplate Ejection (`exam:add`)**: Menghasilkan Model, Migration, Form Request, API Resource, Readonly Service, dan Controller dalam sekali jalan.
-2. **Interactive Authentication (`exam:auth`)**:
-   - Pilihan JWT (menggunakan `tymon/jwt-auth`) atau Laravel Sanctum.
-   - Pilihan otomatis instalasi API scaffolding (`php artisan install:api`).
-   - Konfigurasi guard otomatis pada `config/auth.php`.
-   - Modifikasi User Model (`app/Models/User.php`) otomatis untuk mendukung JWT/Sanctum.
-   - Pembuatan `AuthController` lengkap dengan endpoint Register, Login, Logout, dan Me.
-   - Pendaftaran route autentikasi otomatis pada `routes/api.php`.
-3. **Idempotency (Safe Overwrite)**: Selalu konfirmasi sebelum menimpa file yang sudah ada.
-4. **Cross-OS Compatibility**: Menggunakan `File::ensureDirectoryExists()` untuk kompatibilitas Windows dan Linux.
+1. **Full-Boilerplate Ejection (`exam:add`)**: Menghasilkan Model, Migration, Form Request, API Resource, Service, dan Controller.
+   - `--belongsTo=Model`: Menyuntikkan relasi `belongsTo` di model anak, `hasMany` di model induk, dan kolom FK di migration.
+   - `--with-factory`: Otomatis membuat ModelFactory dan DatabaseSeeder.
+   - `--upload=field`: Menyuntikkan method upload file, validasi tipe/ukuran file, storage put, dan response image URL.
+   - `--web`: Menghasilkan views HTML/Blade, Controller berbasis view redirect, dan mendaftarkan route ke `routes/web.php` (bukan API).
+   - `--enum=field:val1,val2`: Otomatis men-generate backing Enum class PHP, menyuntikkan casts ke model, dan menyiapkan enum column di migration.
+   - `--soft-deletes`: Menyuntikkan trait SoftDeletes ke Model dan `$table->softDeletes()` di migration.
+2. **Admin/Default User Seeder (`exam:seed-admin`)**:
+   - Menghasilkan `AdminUserSeeder.php` khusus berisi akun admin default dan mendaftarkannya ke `DatabaseSeeder.php` secara otomatis.
+3. **Backup & Rollback Infrastructure (`exam:undo`)**:
+   - Secara otomatis mem-backup versi file asli sebelum dimodifikasi oleh command package.
+   - Perintah `php artisan exam:undo` mengembalikan keadaan project ke kondisi semula dengan menghapus file terbuat dan me-restore file yang termodifikasi.
+3. **Global Flags (`--dry-run` & `--force`)**:
+   - `--dry-run`: Preview seluruh aksi penulisan file dan modifikasi di terminal tanpa menyentuh filesystem asli.
+   - `--force`: Menimpa file existing secara otomatis tanpa menampilkan konfirmasi prompt interaktif.
+4. **Configuration File**:
+   - Mengatur preferensi default (driver auth default, framework test default, install scramble docs) di file `config/exam-boots.php` untuk mempercepat input prompt interaktif.
+5. **Auto Validation Rules Preset**:
+   - Otomatis mengisi rules pada Form Request hasil eject sesuai relasi (`exists:table,id`), tipe upload (`image|mimes:jpeg,png...`), dan enum (`Rule::enum()`).
 
 ---
 
@@ -104,6 +114,7 @@ exam:auth   Setup authentication system (JWT / Sanctum) with Login, Register, Lo
 ```bash
 php artisan exam:auth
 ```
+
 - CLI akan mendeteksi apakah API sudah terinstall. Jika belum, ia akan menawarkan instalasi API.
 - Pilih metode autentikasi yang diinginkan: **JWT** atau **Laravel Sanctum**.
 - Semua konfigurasi, model, controller, dan routes akan disetup secara instan.
@@ -113,6 +124,7 @@ php artisan exam:auth
 ```bash
 php artisan exam:add Product
 ```
+
 - Pilih opsi **Eloquent CRUD** atau **Blank Service**.
 - Komponen Product (Model, Migration, Controller, Service, Request, Resource) langsung terbuat.
 
@@ -125,9 +137,11 @@ php artisan exam:add Product
 Menghasilkan file Model, Migration, Controller, Service, Request, dan Resource.
 
 #### Argumen
+
 - `name`: Nama komponen (misalnya: `Product`, `OrderItem`). Otomatis dikonversi ke PascalCase untuk kelas, camelCase untuk variabel, dan snake_case plural untuk tabel database.
 
 #### Contoh Alur Interaktif
+
 ```
 ┌ Generating CRUD boilerplate for: Product
 │
@@ -163,6 +177,7 @@ Menghasilkan file Model, Migration, Controller, Service, Request, dan Resource.
 Menyiapkan sistem autentikasi API lengkap secara interaktif.
 
 #### Alur Flowchart `exam:auth`
+
 ```mermaid
 graph TD
     A["Jalankan: php artisan exam:auth"] --> B{"Apakah project menggunakan API?"}
@@ -179,7 +194,13 @@ graph TD
     H --> I["Eject AuthController.php"]
     H1 --> I
     I --> J["Append Auth Routes ke routes/api.php"]
-    J --> K["Selesai! Tampilkan Summary & Petunjuk Test"]
+    J --> L{"Install API Docs (Scramble)?"}
+    L -- "Yes" --> M["composer require dedoc/scramble"]
+    M --> M1["Publish Scramble Config"]
+    M1 --> M2["Eject ScrambleServiceProvider"]
+    M2 --> M3["Register di bootstrap/providers.php"]
+    M3 --> K["Selesai! Tampilkan Summary & Petunjuk Test"]
+    L -- "No" --> K
 ```
 
 ---
@@ -188,15 +209,62 @@ graph TD
 
 Menghasilkan file Trait helper untuk standarisasi JSON API response (`app/Traits/ApiResponse.php`).
 
-#### Detail Respon & Parameter Opsional
-Jika dipanggil, method helper akan mengembalikan format standard yang seragam. Seluruh parameter bisa dikosongkan (optional).
+---
 
-```php
-// Success Response
-return $this->successResponse($data, $message, $code);
+### Command 4: `php artisan exam:relation`
 
-// Error Response
-return $this->errorResponse($message, $code, $data);
+Membangun relasi antar model (1:1, 1:N, N:M) secara interaktif, menyuntikkan method relasi ke kedua model, dan membuat file migration (termasuk pivot table dengan cascadeOnDelete).
+
+---
+
+### Command 5: `php artisan exam:policy {Model}`
+
+Membuat file Policy untuk otorisasi model dan mendaftarkannya secara otomatis di `AuthServiceProvider.php`.
+
+---
+
+### Command 6: `php artisan exam:test {Model} {--pest}`
+
+Membuat file feature test CRUD endpoint lengkap menggunakan PHPUnit atau Pest PHP (dengan validasi response structure & route protection).
+
+---
+
+### Command 7: `php artisan exam:export {Model}`
+
+Membuat boilerplate class data export Excel (maatwebsite/excel) dan PDF (barryvdh/laravel-dompdf) beserta template blade view-nya.
+
+---
+
+### Command 8: `php artisan exam:doctor`
+
+Memeriksa konfigurasi server & aplikasi (PHP version, DB connection, JWT secret, APP_KEY, storage symlink, pending migrations) sebelum memulai ujian.
+
+---
+
+### Command 9: `php artisan exam:cheatsheet`
+
+Menampilkan daftar command cepat offline langsung di terminal.
+
+---
+
+### Command 10: `php artisan exam:seed-admin`
+
+Menghasilkan seeder admin default berisi email dan password akun untuk mempermudah pengerjaan login pertama saat testing endpoint, serta meng-auto register seeder tersebut ke dalam kelas `DatabaseSeeder.php`.
+
+---
+
+### Command 11: `php artisan exam:undo {id?}`
+
+Membatalkan / me-rollback operasi generator terakhir. Jika terdapat modifikasi file atau pembuatan file baru, perintah ini akan me-restore file backup asli dan menghapus file baru yang digenerate.
+
+---
+
+### Publish Configuration File
+
+Kamu bisa mempublikasikan file konfigurasi bawaan untuk mengatur preferensi ujian kamu (misalnya default menggunakan Sanctum, Pest, atau status install scramble docs):
+
+```bash
+php artisan vendor:publish --tag=exam-boots-config
 ```
 
 ---
@@ -204,13 +272,16 @@ return $this->errorResponse($message, $code, $data);
 ## 💻 Contoh Kode yang Dihasilkan
 
 ### 1. Model & Migration (`exam:add`)
+
 Model yang dihasilkan dilengkapi dengan properti standar Laravel, siap untuk kamu isi bagian `$fillable`-nya.
 Migration file langsung memetakan nama tabel ke format snake_case plural (misal: `Product` -> `products`).
 
 ### 2. JWT AuthController (`exam:auth`)
+
 Berisi method pendaftaran, login, logout, refresh token, dan informasi profil dengan guard `auth:api`.
 
 ### 3. Sanctum AuthController (`exam:auth`)
+
 Menggunakan personal access tokens (`createToken('auth_token')->plainTextToken`) dan guard `auth:sanctum`.
 
 ---
@@ -218,12 +289,25 @@ Menggunakan personal access tokens (`createToken('auth_token')->plainTextToken`)
 ## 🏗️ Arsitektur
 
 ### Struktur Package (Generator & Stubs)
+
 ```
 src/
+├── Concerns/
+│   └── TracksFileOperations.php        # Trait tracking penulisan file, backup & restore
 ├── Console/
 │   ├── ExamAddCommand.php              # CLI Generator CRUD
 │   ├── ExamAuthCommand.php             # CLI Generator Auth
-│   └── ExamResponseCommand.php         # CLI Generator Response Trait
+│   ├── ExamCheatsheetCommand.php       # CLI Cheatsheet Offline
+│   ├── ExamDoctorCommand.php           # CLI Environment Doctor
+│   ├── ExamExportCommand.php           # CLI Export Excel & PDF
+│   ├── ExamPolicyCommand.php           # CLI Policy Generator
+│   ├── ExamRelationCommand.php         # CLI Relation Generator
+│   ├── ExamResponseCommand.php         # CLI ApiResponse Trait Generator
+│   ├── ExamSeedAdminCommand.php        # CLI Admin User Seeder Generator
+│   ├── ExamTestCommand.php             # CLI Test Generator (PHPUnit/Pest)
+│   └── ExamUndoCommand.php             # CLI Rollback/Undo Generator
+├── config/
+│   └── exam-boots.php                  # Konfigurasi package default
 ├── stubs/
 │   ├── controller.stub                 # Eloquent CRUD Controller
 │   ├── controller.blank.stub           # Blank Controller
@@ -233,13 +317,28 @@ src/
 │   ├── resource.stub                   # API Resource
 │   ├── model.stub                      # Eloquent Model
 │   ├── migration.stub                  # Migration database
+│   ├── web-controller.stub             # Web MVC Controller stub
+│   ├── view-index.stub                 # Blade index view stub
+│   ├── view-create.stub                # Blade create view stub
+│   ├── view-edit.stub                  # Blade edit view stub
+│   ├── view-show.stub                  # Blade show view stub
+│   ├── factory.stub                    # Factory stub
+│   ├── seeder.stub                     # Seeder stub
+│   ├── policy.stub                     # Policy class stub
+│   ├── test-phpunit.stub               # PHPUnit test stub
+│   ├── test-pest.stub                  # Pest test stub
+│   ├── export-excel.stub               # Excel Export class stub
+│   ├── export-pdf.stub                 # PDF Export service stub
+│   ├── export-pdf-view.stub            # PDF HTML layout stub
 │   ├── auth-controller.jwt.stub        # AuthController (JWT)
 │   ├── auth-controller.sanctum.stub    # AuthController (Sanctum)
 │   ├── auth-user.jwt.stub              # Model User (JWT)
 │   ├── auth-user.sanctum.stub          # Model User (Sanctum)
 │   ├── auth-routes.jwt.stub            # Routes API (JWT)
 │   ├── auth-routes.sanctum.stub        # Routes API (Sanctum)
-│   └── api-response-trait.stub         # API Response Trait helper
+│   ├── api-response-trait.stub         # API Response Trait helper
+│   ├── scramble-provider.jwt.stub      # ScrambleServiceProvider (JWT)
+│   └── scramble-provider.sanctum.stub  # ScrambleServiceProvider (Sanctum)
 └── ExamStarterServiceProvider.php      # Laravel Auto-discovery & Command registration
 ```
 
@@ -250,32 +349,42 @@ src/
 Setelah setup CRUD dan Auth, ikuti langkah berikut untuk menguji API:
 
 1. **Jalankan Migration**:
+
    ```bash
    php artisan migrate
    ```
 2. **Daftarkan Route CRUD**:
    Buka `routes/api.php` dan daftarkan route resource kamu:
+
    ```php
    use App\Http\Controllers\ProductController;
 
    Route::apiResource('products', ProductController::class);
    ```
-
 3. **Uji Endpoint Autentikasi**:
+
    - **Register**: `POST /api/auth/register` dengan body `name`, `email`, `password`, `password_confirmation`.
    - **Login**: `POST /api/auth/login` dengan body `email`, `password`. Simpan token dari response.
    - **Me**: `GET /api/auth/me` dengan header `Authorization: Bearer {token}`.
    - **Logout**: `POST /api/auth/logout` dengan header `Authorization: Bearer {token}`.
+4. **Buka API Documentation** (jika Scramble terinstall):
+
+   Akses di browser: [http://localhost:8000/docs/api](http://localhost:8000/docs/api)
+
+   Scramble akan secara otomatis mendokumentasikan semua route API, termasuk Auth endpoints. Gunakan tombol **Authorize** di halaman docs untuk menguji endpoint yang membutuhkan autentikasi.
 
 ---
 
 ## ❓ FAQ & Troubleshooting
 
 ### Q: Apa yang harus dilakukan jika class JWTSubject tidak ditemukan setelah setup JWT?
+
 **A**: Pastikan kamu telah menjalankan `composer install` atau `composer update` jika file vendor belum sepenuhnya direfresh.
 
 ### Q: Bagaimana cara mereset secret key JWT?
+
 **A**: Jalankan perintah berikut untuk menggenerasi ulang kunci secret JWT di file `.env`:
+
 ```bash
 php artisan jwt:secret --force
 ```

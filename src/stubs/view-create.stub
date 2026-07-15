@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah {{ModelName}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold tracking-tight">Tambah {{ModelName}}</h1>
+            <a href="{{ route('{{tableName}}.index') }}" class="text-gray-600 hover:text-gray-900 text-sm">Kembali</a>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <form action="{{ route('{{tableName}}.store') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
+                @csrf
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nama / Title</label>
+                    <input type="text" name="name" value="{{ old('name') }}" required class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none">
+                    @error('name')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- TODO: Tambahkan input fields lain sesuai migration di sini -->
+
+                <div class="pt-4 border-t border-gray-100 flex justify-end space-x-2">
+                    <a href="{{ route('{{tableName}}.index') }}" class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50">Batal</a>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

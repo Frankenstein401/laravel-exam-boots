@@ -3,21 +3,53 @@
 namespace App\Services;
 
 use App\Models\{{ModelName}};
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 readonly class {{ModelName}}Service
 {
     /**
-     * Get all {{modelNameLower}} records.
+     * Get all {{modelNameLower}} records with filter, search, sort, and pagination.
      */
-    public function getAll()
+    public function getAll{{ModelName}}(array $filters = []): LengthAwarePaginator
     {
-        return {{ModelName}}::all();
+        $query = {{ModelName}}::query();
+
+        // Filter by exact field match
+        // Usage: ?filter[status]=active&filter[category_id]=3
+        if (! empty($filters['filter'])) {
+            foreach ($filters['filter'] as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+
+        // Search across multiple fields (LIKE)
+        // Usage: ?search=keyword
+        // TODO: Tambahkan kolom yang ingin di-search
+        if (! empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%");
+                // ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Sort by field
+        // Usage: ?sort_by=created_at&sort_order=desc
+        $sortBy = $filters['sort_by'] ?? 'created_at';
+        $sortOrder = $filters['sort_order'] ?? 'desc';
+        $query->orderBy($sortBy, $sortOrder);
+
+        // Paginate
+        // Usage: ?per_page=15
+        $perPage = (int) ($filters['per_page'] ?? 15);
+
+        return $query->paginate($perPage);
     }
 
     /**
      * Get a single {{modelNameLower}} by ID.
      */
-    public function getById($id)
+    public function getDetail{{ModelName}}($id)
     {
         return {{ModelName}}::findOrFail($id);
     }
@@ -25,7 +57,7 @@ readonly class {{ModelName}}Service
     /**
      * Create a new {{modelNameLower}} record.
      */
-    public function create(array $data)
+    public function create{{ModelName}}(array $data)
     {
         return {{ModelName}}::create($data);
     }
@@ -33,7 +65,7 @@ readonly class {{ModelName}}Service
     /**
      * Update an existing {{modelNameLower}} record.
      */
-    public function update($id, array $data)
+    public function update{{ModelName}}($id, array $data)
     {
         ${{modelNameLower}} = {{ModelName}}::findOrFail($id);
         ${{modelNameLower}}->update($data);
@@ -44,7 +76,7 @@ readonly class {{ModelName}}Service
     /**
      * Delete a {{modelNameLower}} record.
      */
-    public function delete($id): bool
+    public function delete{{ModelName}}($id): bool
     {
         ${{modelNameLower}} = {{ModelName}}::findOrFail($id);
 

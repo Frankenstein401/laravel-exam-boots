@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Exports;
+
+use App\Models\{{ModelName}};
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+
+class {{ModelName}}Export implements FromCollection, WithHeadings, WithMapping
+{
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection()
+    {
+        return {{ModelName}}::all();
+    }
+
+    /**
+     * @return array
+     */
+    public function headings(): array
+    {
+        return [
+            'ID',
+            // TODO: Tambahkan kolom heading di sini
+            'Created At',
+        ];
+    }
+
+    /**
+     * @param mixed $row
+     * @return array
+     */
+    public function map($row): array
+    {
+        return [
+            $row->id,
+            // TODO: Map kolom data di sini
+            $row->created_at->format('Y-m-d H:i:s'),
+        ];
+    }
+}

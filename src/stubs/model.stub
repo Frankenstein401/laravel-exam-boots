@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+{{softDeletesImport}}
 
 class {{ModelName}} extends Model
 {
-    use HasFactory;
+    use HasFactory{{softDeletesTrait}};
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +27,8 @@ class {{ModelName}} extends Model
     protected function casts(): array
     {
         return [
-            //
+            {{casts}}
         ];
     }
+{{relationships}}
 }

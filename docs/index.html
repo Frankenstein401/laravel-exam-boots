@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥾 Laravel Exam Boots — Dokumentasi CLI Generator Terbaik untuk Sertifikasi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brutal: {
+                            yellow: '#facc15',
+                            orange: '#fb923c',
+                            pink: '#f472b6',
+                            cyan: '#22d3ee',
+                            lime: '#a3e635',
+                            purple: '#c084fc',
+                            bg: '#fffbeb',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        body: ['Lexend', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Lexend:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-brutal-bg text-black min-h-screen font-body selection:bg-black selection:text-white antialiased">
+
+    <!-- Header / Navbar (Brutalist style) -->
+    <header class="sticky top-0 z-50 bg-white border-b-4 border-black shadow-[0_4px_0_0_#000]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brutal-yellow p-3 border-2 border-black shadow-[2px_2px_0_0_#000] rounded-none">
+                    <i class="fa-solid fa-boot text-2xl text-black"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-2xl tracking-tight font-sans">Laravel Exam Boots</span>
+                    <span class="ml-2 text-xs bg-brutal-lime border-2 border-black text-black px-2 py-0.5 font-bold shadow-[1px_1px_0_0_#000]">v1.2.0</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="https://packagist.org" target="_blank" class="text-sm font-bold text-black hover:underline">
+                    <i class="fa-solid fa-box-open mr-1"></i> Packagist
+                </a>
+                <a href="#install" class="bg-brutal-orange text-black border-2 border-black px-4 py-2 font-extrabold text-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_#000] transition-all shadow-[4px_4px_0_0_#000]">
+                    Mulai Belajar <i class="fa-solid fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Banner (Brutalist Banner) -->
+    <section class="relative py-20 bg-brutal-cyan border-b-4 border-black shadow-[0_4px_0_0_#000]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+            <div class="inline-flex items-center space-x-2 bg-white border-2 border-black px-3 py-1 text-black text-xs font-bold mb-6 shadow-[2px_2px_0_0_#000]">
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border border-black"></span>
+                <span>Boots Up, Code Fast, Pass the Exam! 🚀</span>
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight font-sans text-black mb-6 max-w-4xl mx-auto leading-none uppercase">
+                Hemat Waktu Setup Ujian Sertifikasi Hingga <span class="bg-white border-2 border-black px-2 text-red-500 shadow-[4px_4px_0_0_#000]">90%</span>
+            </h1>
+            <p class="text-lg font-medium text-black max-w-2xl mx-auto mb-10 leading-relaxed bg-white border-2 border-black p-4 shadow-[4px_4px_0_0_#000]">
+                CLI Component & Auth Generator yang menyuntikkan kode arsitektur modern (Model, Migration, Controller, Service, Request, Resource) langsung ke dalam project Laravel kamu.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
+                <div class="bg-white border-4 border-black px-5 py-3 flex items-center space-x-3 max-w-md w-full sm:w-auto font-mono text-sm shadow-[6px_6px_0_0_#000]">
+                    <span class="text-red-500 font-extrabold">$</span>
+                    <span class="text-black select-all font-bold" id="installCmd">composer require gani/laravel-exam-boots</span>
+                    <button onclick="copyText('installCmd', this)" class="text-black hover:text-red-500 transition-colors pl-2 border-l-2 border-black">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Layout -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-col lg:flex-row gap-12">
+            
+            <!-- Sidebar Navigation (Brutalist styled) -->
+            <aside class="lg:w-72 shrink-0">
+                <nav class="sticky top-28 space-y-8 bg-white border-4 border-black p-6 shadow-[6px_6px_0_0_#000]">
+                    <div>
+                        <h3 class="text-sm font-black text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1">Persiapan</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#install" class="block py-1 px-2 font-bold text-black hover:bg-brutal-yellow hover:border-black border border-transparent transition-all"><i class="fa-solid fa-download w-5"></i> Instalasi</a></li>
+                            <li><a href="#doctor" class="block py-1 px-2 font-bold text-black hover:bg-brutal-lime hover:border-black border border-transparent transition-all"><i class="fa-solid fa-user-doctor w-5"></i> Pre-flight Doctor</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1">Autentikasi & Docs</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#auth" class="block py-1 px-2 font-bold text-black hover:bg-brutal-pink hover:border-black border border-transparent transition-all"><i class="fa-solid fa-lock w-5"></i> Setup Auth</a></li>
+                            <li><a href="#scramble" class="block py-1 px-2 font-bold text-black hover:bg-brutal-purple hover:border-black border border-transparent transition-all"><i class="fa-solid fa-book-open w-5"></i> API Scramble Docs</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1">CRUD & Generator</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#add" class="block py-1 px-2 font-bold text-black hover:bg-brutal-orange hover:border-black border border-transparent transition-all"><i class="fa-solid fa-folder-plus w-5"></i> Eject CRUD (exam:add)</a></li>
+                            <li><a href="#relation" class="block py-1 px-2 font-bold text-black hover:bg-brutal-cyan hover:border-black border border-transparent transition-all"><i class="fa-solid fa-link w-5"></i> Relasi Interaktif</a></li>
+                            <li><a href="#response" class="block py-1 px-2 font-bold text-black hover:bg-brutal-yellow hover:border-black border border-transparent transition-all"><i class="fa-solid fa-reply w-5"></i> ApiResponse Trait</a></li>
+                            <li><a href="#policy" class="block py-1 px-2 font-bold text-black hover:bg-brutal-lime hover:border-black border border-transparent transition-all"><i class="fa-solid fa-shield-halved w-5"></i> Policy Generator</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1">Ekspor & Pengujian</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#test" class="block py-1 px-2 font-bold text-black hover:bg-brutal-pink hover:border-black border border-transparent transition-all"><i class="fa-solid fa-vial w-5"></i> Test Skeleton</a></li>
+                            <li><a href="#export" class="block py-1 px-2 font-bold text-black hover:bg-brutal-cyan hover:border-black border border-transparent transition-all"><i class="fa-solid fa-file-export w-5"></i> Ekspor Excel/PDF</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1">Lainnya</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#cheatsheet" class="block py-1 px-2 font-bold text-black hover:bg-brutal-yellow hover:border-black border border-transparent transition-all"><i class="fa-solid fa-clipboard-list w-5"></i> Cheatsheet Offline</a></li>
+                            <li><a href="#undo" class="block py-1 px-2 font-bold text-black hover:bg-brutal-orange hover:border-black border border-transparent transition-all"><i class="fa-solid fa-rotate-left w-5"></i> Rollback (exam:undo)</a></li>
+                            <li><a href="#seed-admin" class="block py-1 px-2 font-bold text-black hover:bg-brutal-lime hover:border-black border border-transparent transition-all"><i class="fa-solid fa-user-plus w-5"></i> Admin Seeder</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- Main Documentation Content -->
+            <div class="flex-1 space-y-20 max-w-4xl">
+                
+                <!-- Section: Instalasi -->
+                <section id="install" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Instalasi & Pengenalan</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Laravel Exam Boots menggunakan konsep <span class="bg-brutal-yellow px-1 border border-black font-bold">ejection (shadcn/ui philosophy)</span>. Kode-kode generator langsung diletakkan di dalam folder `app/` agar kamu memiliki kontrol 100% saat kustomisasi soal ujian.
+                    </p>
+                    <div class="bg-brutal-bg border-4 border-black p-6 shadow-[4px_4px_0_0_#000]">
+                        <h3 class="text-xl font-black text-black mb-4 uppercase">Langkah Instalasi</h3>
+                        <ol class="space-y-4 list-decimal list-inside text-black font-medium">
+                            <li>Jalankan composer require di root project Laravel kamu:
+                                <div class="bg-black text-white border-2 border-black px-4 py-2.5 font-mono text-sm mt-2 flex items-center justify-between">
+                                    <span id="installStep">composer require gani/laravel-exam-boots</span>
+                                    <button onclick="copyText('installStep', this)" class="text-brutal-yellow hover:text-white transition-colors">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>Pastikan package ter-load dengan benar:
+                                <div class="bg-black text-white border-2 border-black px-4 py-2.5 font-mono text-sm mt-2 flex items-center justify-between">
+                                    <span id="listStep">php artisan list | grep exam</span>
+                                    <button onclick="copyText('listStep', this)" class="text-brutal-yellow hover:text-white transition-colors">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </button>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Section: Doctor -->
+                <section id="doctor" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-user-doctor"></i>
+                        <span>Pre-flight Environment Doctor</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Sebelum mulai ujian, pastikan lingkungan development kamu sudah siap dengan perintah `exam:doctor`. Perintah ini meminimalkan potensi kegagalan di tengah jalan akibat masalah konfigurasi DB atau PHP.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                        <div class="p-6 font-mono text-xs md:text-sm leading-relaxed text-emerald-400 bg-black overflow-x-auto">
+                            <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3 text-white">
+                                <span>php artisan exam:doctor</span>
+                                <button onclick="copyTextStr('php artisan exam:doctor', this)" class="text-slate-400 hover:text-white transition-colors">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                            <pre class="font-mono text-xs md:text-sm whitespace-pre text-left text-emerald-400">🏥 Laravel Exam Boots — Environment Doctor
+
+┌──────────────────────┬──────────┬─────────────────────────┐
+│ Check                │ Status   │ Details                 │
+├──────────────────────┼──────────┼─────────────────────────┤
+│ PHP Version          │ ✅ OK    │ 8.3.12                  │
+│ Laravel Structure    │ ✅ OK    │ Laravel 11+ (modern)    │
+│ .env File            │ ✅ OK    │ Ditemukan               │
+│ APP_KEY              │ ✅ OK    │ Sudah diset             │
+│ APP_DEBUG            │ ✅ OK    │ Debug aktif             │
+│ Database Connection  │ ✅ OK    │ Koneksi berhasil (mysql)│
+│ Pending Migrations   │ ✅ OK    │ Semua migration up-to-date│
+│ Storage Link         │ ❌ Fail  │ Belum dilink!           │
+└──────────────────────┴──────────┴─────────────────────────┘
+
+<span class="text-rose-400 font-bold">⚠️ Storage Link bermasalah. Jalankan: php artisan storage:link</span></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Add CRUD -->
+                <section id="add" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-folder-plus"></i>
+                        <span>Artisan CRUD Generator</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Buat file scaffolding lengkap (Model, Migration, Controller, Service, Request, Resource) hanya dengan satu command:
+                    </p>
+
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000] mb-8">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">Scaffolding Command</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm bg-black text-brutal-cyan flex justify-between items-center">
+                            <span>php artisan exam:add Product</span>
+                            <button onclick="copyTextStr('php artisan exam:add Product', this)" class="text-slate-400 hover:text-white transition-colors">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Flag Options yang Sangat Penting</h3>
+                    <div class="space-y-4">
+                        <div class="border-2 border-black p-4 bg-brutal-yellow shadow-[4px_4px_0_0_#000] transition-transform hover:-translate-y-1">
+                            <code class="text-black text-md font-mono font-extrabold">--belongsTo=Category</code>
+                            <p class="text-black text-sm font-medium mt-1">Otomatis menyuntikkan relasi <code>belongsTo</code> di model saat ini, <code>hasMany</code> di model Parent, serta kolom Foreign Key di migration.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-brutal-lime shadow-[4px_4px_0_0_#000] transition-transform hover:-translate-y-1">
+                            <code class="text-black text-md font-mono font-extrabold">--with-factory</code>
+                            <p class="text-black text-sm font-medium mt-1">Membuat file Model Factory & Database Seeder sekaligus, terintegrasi otomatis.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-brutal-cyan shadow-[4px_4px_0_0_#000] transition-transform hover:-translate-y-1">
+                            <code class="text-black text-md font-mono font-extrabold">--upload=image</code>
+                            <p class="text-black text-sm font-medium mt-1">Menyisipkan handler upload file (image/pdf/etc.), validasi ukuran file, logic Storage, dan property resource URL.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-brutal-orange shadow-[4px_4px_0_0_#000] transition-transform hover:-translate-y-1">
+                            <code class="text-black text-md font-mono font-extrabold">--web</code>
+                            <p class="text-black text-sm font-medium mt-1">Mengaktifkan mode Web MVC: Menghasilkan 4 file Blade views (index, create, edit, show) siap pakai yang di-style dengan Tailwind CSS, Controller redirect, dan auto-register ke <code>routes/web.php</code>.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-brutal-purple shadow-[4px_4px_0_0_#000] transition-transform hover:-translate-y-1">
+                            <code class="text-black text-md font-mono font-extrabold">--enum=status:active,inactive</code>
+                            <p class="text-black text-sm font-medium mt-1">Membuat file Enum baru (<code>app/Enums/Status.php</code>), menambahkan casting Enum ke Model, dan menyiapkan tipe data ENUM di database migration.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-brutal-pink shadow-[4px_4px_0_0_#000] transition-transform hover:-translate-y-1">
+                            <code class="text-black text-md font-mono font-extrabold">--soft-deletes</code>
+                            <p class="text-black text-sm font-medium mt-1">Menyisipkan trait <code>SoftDeletes</code> ke Model dan mendefinisikan kolom <code>softDeletes()</code> pada file migration database.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-white shadow-[4px_4px_0_0_#000] transition-transform hover:-translate-y-1">
+                            <code class="text-black text-md font-mono font-extrabold">--dry-run / --force</code>
+                            <p class="text-black text-sm font-medium mt-1"><code>--dry-run</code> digunakan untuk preview operasi file sebelum dieksekusi. <code>--force</code> digunakan untuk menimpa file yang sudah ada tanpa konfirmasi prompt.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Auth -->
+                <section id="auth" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Setup Authentication</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Buat sistem register, login, profile info (me), dan logout instan. Kamu hanya perlu memilih driver token auth:
+                    </p>
+                    <div class="bg-brutal-bg border-4 border-black p-6 shadow-[4px_4px_0_0_#000] mb-6">
+                        <span class="text-xs bg-black text-white px-2 py-1 font-bold uppercase">Langkah Setup</span>
+                        <ol class="list-decimal list-inside space-y-3 text-black font-medium mt-4">
+                            <li>Jalankan: <code class="bg-white border border-black px-1.5 font-mono font-bold">php artisan exam:auth</code></li>
+                            <li>Pilih driver: **JWT** (tymon/jwt-auth) atau **Sanctum** (laravel/sanctum).</li>
+                            <li>Ketik **Yes/Ya** jika ingin sekaligus di-instalkan **API docs Scramble** secara otomatis.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Section: Scramble Docs -->
+                <section id="scramble" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>Scramble API Docs</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Scramble mendokumentasikan API Laravel secara dinamis tanpa anotasi PHPDoc yang rumit. Jika diaktifkan saat setup auth, program akan meng-configure Service Provider agar mendeteksi metode autentikasi secara otomatis.
+                    </p>
+                    <div class="border-2 border-black p-4 bg-brutal-lime text-black font-bold shadow-[4px_4px_0_0_#000]">
+                        <p>📍 URL Dokumentasi API dapat diakses di: <code class="bg-white border border-black px-1.5 text-black font-mono">http://localhost:8000/docs/api</code> setelah server berjalan.</p>
+                    </div>
+                </section>
+
+                <!-- Section: Relation -->
+                <section id="relation" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-link"></i>
+                        <span>Relasi Interaktif</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Gunakan `exam:relation` untuk menghubungkan dua model yang sudah ada dengan panduan interaktif terminal. Mendukung relasi **One to One**, **One to Many**, dan **Many to Many**.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">CLI Command</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm bg-black text-brutal-lime flex justify-between items-center">
+                            <span>php artisan exam:relation</span>
+                            <button onclick="copyTextStr('php artisan exam:relation', this)" class="text-slate-400 hover:text-white transition-colors">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Response -->
+                <section id="response" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-reply"></i>
+                        <span>ApiResponse Trait</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Standardisasi format JSON API dengan ejecting trait `ApiResponse.php` ke folder `app/Traits/`.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000] mb-6">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">CLI Command</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm bg-black text-brutal-yellow flex justify-between items-center">
+                            <span>php artisan exam:response</span>
+                            <button onclick="copyTextStr('php artisan exam:response', this)" class="text-slate-400 hover:text-white transition-colors">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono text-slate-500">app/Traits/ApiResponse.php</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm leading-relaxed text-white bg-black">
+                            <p class="text-slate-500">// Di Controller kamu:</p>
+                            <p class="text-brutal-cyan">use App\Traits\ApiResponse;</p>
+                            <br>
+                            <p>class ProductController extends Controller</p>
+                            <p>{</p>
+                            <p class="pl-4">use ApiResponse;</p>
+                            <br>
+                            <p class="pl-4">public function index()</p>
+                            <p class="pl-4">{</p>
+                            <p class="pl-8">return <span class="text-brutal-lime">$this->successResponse</span>($products, "Data berhasil diload");</p>
+                            <p class="pl-4">}</p>
+                            <p>}</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Policy -->
+                <section id="policy" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Policy/Authorization</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Gunakan `exam:policy {Model}` untuk membuat authorization Policy dan auto-register ke dalam array `$policies` di `AuthServiceProvider.php`.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">CLI Command</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm bg-black text-brutal-lime flex justify-between items-center">
+                            <span>php artisan exam:policy Product</span>
+                            <button onclick="copyTextStr('php artisan exam:policy Product', this)" class="text-slate-400 hover:text-white transition-colors">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Test -->
+                <section id="test" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-vial"></i>
+                        <span>Feature Test Skeleton</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Buat pengujian otomatis untuk modul CRUD dan endpoint protection. CLI mendukung framework testing bawaan PHPUnit atau Pest PHP.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">Generate Command</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm bg-black text-white space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span>php artisan exam:test Product <span class="text-slate-500"># PHPUnit</span></span>
+                                <button onclick="copyTextStr('php artisan exam:test Product', this)" class="text-slate-400 hover:text-white transition-colors">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="flex justify-between items-center border-t border-slate-800 pt-4">
+                                <span>php artisan exam:test Product --pest <span class="text-slate-500"># Pest PHP</span></span>
+                                <button onclick="copyTextStr('php artisan exam:test Product --pest', this)" class="text-slate-400 hover:text-white transition-colors">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Export -->
+                <section id="export" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-file-export"></i>
+                        <span>Ekspor Data (Excel/PDF)</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Generate boilerplate logic untuk mengekspor data ke file Excel atau PDF lengkap dengan blade layout styling.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">CLI Command</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm bg-black text-brutal-cyan flex justify-between items-center">
+                            <span>php artisan exam:export Product</span>
+                            <button onclick="copyTextStr('php artisan exam:export Product', this)" class="text-slate-400 hover:text-white transition-colors">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Undo -->
+                <section id="undo" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Rollback & Revert (exam:undo)</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Salah ketik nama model atau relasi? Gunakan `exam:undo` untuk mengembalikan file yang dimodifikasi ke versi backup aslinya dan menghapus file yang baru digenerate secara aman.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">CLI Command</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm bg-black text-brutal-orange flex justify-between items-center">
+                            <span>php artisan exam:undo</span>
+                            <button onclick="copyTextStr('php artisan exam:undo', this)" class="text-slate-400 hover:text-white transition-colors">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Admin Seeder -->
+                <section id="seed-admin" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Admin User Seeder</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Buat data dummy admin default secara instan untuk mempercepat proses testing login API/Web. Command ini men-generate class seeder dan mendaftarkannya langsung ke kelas `DatabaseSeeder.php`.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">CLI Command</span>
+                        </div>
+                        <div class="p-6 font-mono text-sm bg-black text-brutal-lime flex justify-between items-center">
+                            <span>php artisan exam:seed-admin --email=admin@example.com --password=password</span>
+                            <button onclick="copyTextStr('php artisan exam:seed-admin', this)" class="text-slate-400 hover:text-white transition-colors">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Cheatsheet -->
+                <section id="cheatsheet" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>Cheatsheet Offline</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-6">
+                        Butuh referensi cepat di tengah ujian tanpa internet? Panggil cheatsheet langsung di terminal kamu.
+                    </p>
+                    <div class="border-4 border-black overflow-hidden shadow-[8px_8px_0_0_#000]">
+                        <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
+                            <span class="text-xs font-mono font-bold">Terminal Output</span>
+                        </div>
+                        <div class="p-6 font-mono text-xs leading-relaxed text-slate-300 bg-black">
+                            <p class="text-brutal-yellow">php artisan exam:cheatsheet</p>
+                            <br>
+                            <p class="text-brutal-cyan font-bold">🥾 Laravel Exam Boots — Quick Reference Cheatsheet</p>
+                            <p class="text-slate-500">══════════════════════════════════════════════════════════════════════════════</p>
+                            <p class="text-slate-500"># GENERATE BOILERPLATE</p>
+                            <p>  php artisan exam:add Product                    # CRUD Boilerplate</p>
+                            <p>  php artisan exam:add Product --with-factory     # + Factory & Seeder</p>
+                            <p>  php artisan exam:add Product --belongsTo=User   # + Auto-relasi</p>
+                            <p>  php artisan exam:add Product --upload=image     # + File upload handler</p>
+                            <p>  php artisan exam:add Product --enum=status:active,inactive # + Enum Class</p>
+                            <p>  php artisan exam:add Product --soft-deletes     # + SoftDeletes</p>
+                            <p class="text-slate-500"># RELATIONSHIP</p>
+                            <p>  php artisan exam:relation                       # Interactive relation (1:1, 1:N, N:M)</p>
+                            <p class="text-slate-500"># AUTHENTICATION</p>
+                            <p>  php artisan exam:auth                           # Setup JWT / Sanctum + controllers</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white border-t-4 border-black py-12 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-slate-400 text-sm">&copy; 2026 Laravel Exam Boots. Dibuat untuk mempermudah pengerjaan ujian sertifikasi.</p>
+            <p class="text-brutal-yellow text-md font-black mt-2 uppercase tracking-wider">Boots Up, Code Fast, Pass the Exam! 🚀</p>
+        </div>
+    </footer>
+
+    <!-- Simple Copy script -->
+    <script>
+        function copyText(id, btn) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = btn.querySelector('i');
+                icon.className = 'fa-solid fa-check text-brutal-lime';
+                setTimeout(() => {
+                    icon.className = 'fa-regular fa-copy';
+                }, 2000);
+            });
+        }
+        function copyTextStr(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = btn.querySelector('i');
+                icon.className = 'fa-solid fa-check text-brutal-lime';
+                setTimeout(() => {
+                    icon.className = 'fa-regular fa-copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

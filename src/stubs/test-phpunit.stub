@@ -1,0 +1,99 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\{{ModelName}};
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class {{ModelName}}Test extends TestCase
+{
+    use RefreshDatabase;
+
+    private User $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
+
+    /** @test */
+    public function it_can_list_all_{{tableName}}(): void
+    {
+        {{ModelName}}::factory(3)->create();
+
+        $response = $this->actingAs($this->user)
+            ->getJson('/api/{{tableName}}');
+
+        $response->assertOk()
+            ->assertJsonStructure([
+                'status',
+                'data',
+                'meta' => ['current_page', 'last_page', 'per_page', 'total'],
+            ]);
+    }
+
+    /** @test */
+    public function it_can_create_a_{{modelNameLower}}(): void
+    {
+        $data = [
+            // TODO: Tambahkan field data di sini
+        ];
+
+        $response = $this->actingAs($this->user)
+            ->postJson('/api/{{tableName}}', $data);
+
+        $response->assertCreated()
+            ->assertJsonPath('status', 'success');
+    }
+
+    /** @test */
+    public function it_can_show_a_{{modelNameLower}}(): void
+    {
+        ${{modelNameLower}} = {{ModelName}}::factory()->create();
+
+        $response = $this->actingAs($this->user)
+            ->getJson("/api/{{tableName}}/{${{modelNameLower}}->id}");
+
+        $response->assertOk()
+            ->assertJsonPath('status', 'success');
+    }
+
+    /** @test */
+    public function it_can_update_a_{{modelNameLower}}(): void
+    {
+        ${{modelNameLower}} = {{ModelName}}::factory()->create();
+
+        $data = [
+            // TODO: Tambahkan field update di sini
+        ];
+
+        $response = $this->actingAs($this->user)
+            ->putJson("/api/{{tableName}}/{${{modelNameLower}}->id}", $data);
+
+        $response->assertOk()
+            ->assertJsonPath('status', 'success');
+    }
+
+    /** @test */
+    public function it_can_delete_a_{{modelNameLower}}(): void
+    {
+        ${{modelNameLower}} = {{ModelName}}::factory()->create();
+
+        $response = $this->actingAs($this->user)
+            ->deleteJson("/api/{{tableName}}/{${{modelNameLower}}->id}");
+
+        $response->assertOk();
+        $this->assertDatabaseMissing('{{tableName}}', ['id' => ${{modelNameLower}}->id]);
+    }
+
+    /** @test */
+    public function unauthenticated_user_cannot_access_{{tableName}}(): void
+    {
+        $response = $this->getJson('/api/{{tableName}}');
+
+        $response->assertUnauthorized();
+    }
+}

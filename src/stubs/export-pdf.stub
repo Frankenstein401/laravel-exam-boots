@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Exports;
+
+use App\Models\{{ModelName}};
+use Barryvdh\DomPDF\Facade\Pdf;
+
+class {{ModelName}}PdfExport
+{
+    /**
+     * Generate PDF and return download response.
+     */
+    public function download()
+    {
+        ${{modelNameLower}}s = {{ModelName}}::all();
+
+        $pdf = Pdf::loadView('exports.{{tableName}}-pdf', [
+            'data' => ${{modelNameLower}}s,
+        ]);
+
+        return $pdf->download('{{tableName}}-export.pdf');
+    }
+
+    /**
+     * Generate PDF and return stream response (view in browser).
+     */
+    public function stream()
+    {
+        ${{modelNameLower}}s = {{ModelName}}::all();
+
+        $pdf = Pdf::loadView('exports.{{tableName}}-pdf', [
+            'data' => ${{modelNameLower}}s,
+        ]);
+
+        return $pdf->stream('{{tableName}}-export.pdf');
+    }
+}
