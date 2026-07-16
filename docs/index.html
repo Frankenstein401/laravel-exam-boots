@@ -48,7 +48,7 @@
                 </div>
                 <div>
                     <span class="font-extrabold text-2xl tracking-tight font-sans">Laravel Exam Boots</span>
-                    <span class="ml-2 text-xs bg-brutal-lime border-2 border-black text-black px-2 py-0.5 font-bold shadow-[1px_1px_0_0_#000]">v1.2.1</span>
+                    <span class="ml-2 text-xs bg-brutal-lime border-2 border-black text-black px-2 py-0.5 font-bold shadow-[1px_1px_0_0_#000]">v1.2.2</span>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
@@ -340,7 +340,7 @@
                     </div>
 
                     <h3 class="text-2xl font-black text-black mb-4 uppercase">Flag Options yang Sangat Penting</h3>
-                    <div class="space-y-4">
+                    <div class="space-y-4 mb-8">
                         <div class="border-2 border-black p-4 bg-brutal-yellow shadow-[4px_4px_0_0_#000] transition-transform hover:-translate-y-1">
                             <code class="text-black text-md font-mono font-extrabold">--belongsTo=Category</code>
                             <p class="text-black text-sm font-medium mt-1">Otomatis menyuntikkan relasi <code>belongsTo</code> di model saat ini, <code>hasMany</code> di model Parent, serta kolom Foreign Key di migration.</p>
@@ -370,6 +370,21 @@
                             <p class="text-black text-sm font-medium mt-1"><code>--dry-run</code> digunakan untuk preview operasi file sebelum dieksekusi. <code>--force</code> digunakan untuk menimpa file yang sudah ada tanpa konfirmasi prompt.</p>
                         </div>
                     </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Detail Logic & Hasil Generator</h3>
+                    <div class="bg-black text-white p-6 font-mono text-xs overflow-x-auto border-4 border-black shadow-[4px_4px_0_0_#000]">
+                        <p class="text-slate-500">// File Controller yang di-generate sudah mendukung filter, sorting, pagination, dan search:</p>
+                        <p class="text-brutal-cyan">public function index(Request $request): JsonResponse</p>
+                        <p>{</p>
+                        <p class="pl-4">// Memanggil Service layer secara clean</p>
+                        <p class="pl-4">$products = $this->productService->getAllProduct($request->all());</p>
+                        <p class="pl-4">return response()->json([</p>
+                        <p class="pl-8">'status' => 'success',</p>
+                        <p class="pl-8">'data' => ProductResource::collection($products),</p>
+                        <p class="pl-8">'meta' => [ ... ]</p>
+                        <p class="pl-4">]);</p>
+                        <p>}</p>
+                    </div>
                 </section>
 
                 <!-- Section: Auth -->
@@ -379,15 +394,31 @@
                         <span>Setup Authentication</span>
                     </h2>
                     <p class="text-black leading-relaxed font-medium mb-6">
-                        Buat sistem register, login, profile info (me), dan logout instan. Kamu hanya perlu memilih driver token auth:
+                        Buat sistem login, register, profile info (me), dan logout secara instan. Fitur ini akan otomatis menghasilkan endpoint autentikasi modern di dalam folder Controller.
                     </p>
-                    <div class="bg-brutal-bg border-4 border-black p-6 shadow-[4px_4px_0_0_#000] mb-6">
+                    <div class="bg-brutal-bg border-4 border-black p-6 shadow-[4px_4px_0_0_#000] mb-8">
                         <span class="text-xs bg-black text-white px-2 py-1 font-bold uppercase">Langkah Setup</span>
                         <ol class="list-decimal list-inside space-y-3 text-black font-medium mt-4">
                             <li>Jalankan: <code class="bg-white border border-black px-1.5 font-mono font-bold">php artisan exam:auth</code></li>
                             <li>Pilih driver: **JWT** (tymon/jwt-auth) atau **Sanctum** (laravel/sanctum).</li>
                             <li>Ketik **Yes/Ya** jika ingin sekaligus di-instalkan **API docs Scramble** secara otomatis.</li>
                         </ol>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">File yang Dihasilkan</h3>
+                    <div class="space-y-4">
+                        <div class="border-2 border-black p-4 bg-white shadow-[2px_2px_0_0_#000]">
+                            <h4 class="font-extrabold text-sm text-black">1. AuthController</h4>
+                            <p class="text-xs font-mono text-slate-500 mt-1">API: app/Http/Controllers/Api/DocsAuthController.php</p>
+                            <p class="text-xs font-mono text-slate-500">Web: app/Http/Controllers/DocsAuthController.php</p>
+                            <p class="text-sm text-black mt-2 font-medium">Berisi method <code>register()</code>, <code>login()</code>, <code>me()</code>, dan <code>logout()</code>.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-white shadow-[2px_2px_0_0_#000]">
+                            <h4 class="font-extrabold text-sm text-black">2. Route Registration</h4>
+                            <p class="text-xs font-mono text-slate-500 mt-1">API: routes/api.php</p>
+                            <p class="text-xs font-mono text-slate-500">Web: routes/web.php</p>
+                            <p class="text-sm text-black mt-2 font-medium">Didaftarkan otomatis dengan grup route dan middleware protection yang sesuai (<code>auth:sanctum</code> atau <code>auth:api</code>).</p>
+                        </div>
                     </div>
                 </section>
 
@@ -400,9 +431,21 @@
                     <p class="text-black leading-relaxed font-medium mb-6">
                         Scramble mendokumentasikan API Laravel secara dinamis tanpa anotasi PHPDoc yang rumit. Jika diaktifkan saat setup auth, program akan meng-configure Service Provider agar mendeteksi metode autentikasi secara otomatis.
                     </p>
-                    <div class="border-2 border-black p-4 bg-brutal-lime text-black font-bold shadow-[4px_4px_0_0_#000]">
-                        <p>📍 URL Dokumentasi API dapat diakses di: <code class="bg-white border border-black px-1.5 text-black font-mono">http://localhost:8000/docs/api</code> setelah server berjalan.</p>
+                    
+                    <div class="bg-brutal-bg border-4 border-black p-6 shadow-[4px_4px_0_0_#000] mb-8">
+                        <h3 class="text-lg font-black text-black mb-2 uppercase">Cara Mengakses</h3>
+                        <p class="text-black text-sm font-medium leading-relaxed">
+                            Nyalakan server lokal kamu dengan perintah:
+                            <code class="bg-white border border-black px-1.5 font-mono font-bold block my-2 w-max text-xs">php artisan serve</code>
+                            Buka browser ke alamat berikut untuk melihat OpenAPI Docs interaktif:
+                            <code class="bg-white border border-black px-1.5 font-mono font-bold block my-2 w-max text-xs text-red-500 select-all">http://localhost:8000/docs/api</code>
+                        </p>
                     </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Kustomisasi Service Provider</h3>
+                    <p class="text-black text-sm font-medium mb-4">
+                        File config scrambler terletak di <code>app/Providers/ScrambleServiceProvider.php</code>. Kamu bisa mengubah deskripsi API, judul dokumen, atau membatasi akses dokumentasi hanya di environment local.
+                    </p>
                 </section>
 
                 <!-- Section: Relation -->
@@ -414,7 +457,7 @@
                     <p class="text-black leading-relaxed font-medium mb-6">
                         Gunakan `exam:relation` untuk menghubungkan dua model yang sudah ada dengan panduan interaktif terminal. Mendukung relasi **One to One**, **One to Many**, dan **Many to Many**.
                     </p>
-                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000] mb-8">
                         <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
                             <span class="text-xs font-mono font-bold">CLI Command</span>
                         </div>
@@ -424,6 +467,19 @@
                                 <i class="fa-regular fa-copy"></i>
                             </button>
                         </div>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Langkah Menggunakan</h3>
+                    <div class="bg-white border-2 border-black p-6 font-medium text-sm space-y-4 mb-8">
+                        <p class="font-extrabold">1. Tentukan Model Utama (Parent) & Anak (Child):</p>
+                        <p class="text-slate-600">CLI akan memindai folder <code>app/Models</code> dan meminta kamu memilih model induk (misal: <code>User</code>) dan model anak (misal: <code>Post</code>).</p>
+                        
+                        <p class="font-extrabold">2. Pilih Tipe Relasi:</p>
+                        <ul class="list-disc list-inside space-y-1 text-slate-600">
+                            <li><strong>One to Many (1:N)</strong>: Menambahkan hasMany ke Parent, belongsTo ke Child, dan FK column ke migration.</li>
+                            <li><strong>One to One (1:1)</strong>: Menambahkan hasOne ke Parent, belongsTo ke Child.</li>
+                            <li><strong>Many to Many (N:M)</strong>: Menambahkan belongsToMany ke kedua model, sekaligus men-generate file migration table pivot (contoh: <code>post_user</code>).</li>
+                        </ul>
                     </div>
                 </section>
 
@@ -447,6 +503,8 @@
                             </button>
                         </div>
                     </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Contoh Kode Kontroler</h3>
                     <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
                         <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
                             <span class="text-xs font-mono text-slate-500">app/Traits/ApiResponse.php</span>
@@ -477,7 +535,7 @@
                     <p class="text-black leading-relaxed font-medium mb-6">
                         Gunakan `exam:policy {Model}` untuk membuat authorization Policy dan auto-register ke dalam array `$policies` di `AuthServiceProvider.php`.
                     </p>
-                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000] mb-8">
                         <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
                             <span class="text-xs font-mono font-bold">CLI Command</span>
                         </div>
@@ -487,6 +545,14 @@
                                 <i class="fa-regular fa-copy"></i>
                             </button>
                         </div>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Bagaimana Cara Kerjanya?</h3>
+                    <div class="bg-white border-2 border-black p-6 font-medium text-sm space-y-4">
+                        <p>1. **Pembuatan File**: Package men-generate class policy di folder <code>app/Policies/ProductPolicy.php</code> lengkap dengan method standard (<code>viewAny</code>, <code>view</code>, <code>create</code>, <code>update</code>, <code>delete</code>, dsb.).</p>
+                        <p>2. **Auto-Registrasi**: Jika file <code>app/Providers/AuthServiceProvider.php</code> ada di project kamu, package akan mendeteksi baris <code>protected $policies = [</code> dan mendaftarkan pemetaan policy secara otomatis.</p>
+                        <p>3. **Penerapan Authorization**: Kamu bisa menerapkan policy ini di controller kamu:</p>
+                        <code class="bg-black text-white p-3 font-mono text-xs block">$this->authorize('update', $product);</code>
                     </div>
                 </section>
 
@@ -499,7 +565,7 @@
                     <p class="text-black leading-relaxed font-medium mb-6">
                         Buat pengujian otomatis untuk modul CRUD dan endpoint protection. CLI mendukung framework testing bawaan PHPUnit atau Pest PHP.
                     </p>
-                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000] mb-8">
                         <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
                             <span class="text-xs font-mono font-bold">Generate Command</span>
                         </div>
@@ -518,6 +584,16 @@
                             </div>
                         </div>
                     </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Cakupan Uji CRUD & Auth</h3>
+                    <div class="bg-white border-2 border-black p-6 font-medium text-sm space-y-2 mb-8">
+                        <p>✅ **Read**: Menguji akses user terautentikasi terhadap endpoint list index.</p>
+                        <p>✅ **Create**: Menguji pengiriman payload data untuk menyimpan record baru.</p>
+                        <p>✅ **Detail**: Menguji request pencarian detail data berdasarkan ID.</p>
+                        <p>✅ **Update**: Menguji pengeditan data yang sudah tersimpan di DB.</p>
+                        <p>✅ **Delete**: Menguji penghapusan data dan asersi data hilang dari database.</p>
+                        <p>✅ **Auth Protection**: Memastikan user tanpa token diblokir secara aman dengan status HTTP `401 Unauthorized`.</p>
+                    </div>
                 </section>
 
                 <!-- Section: Export -->
@@ -529,7 +605,7 @@
                     <p class="text-black leading-relaxed font-medium mb-6">
                         Generate boilerplate logic untuk mengekspor data ke file Excel atau PDF lengkap dengan blade layout styling.
                     </p>
-                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000] mb-8">
                         <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
                             <span class="text-xs font-mono font-bold">CLI Command</span>
                         </div>
@@ -539,6 +615,17 @@
                                 <i class="fa-regular fa-copy"></i>
                             </button>
                         </div>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Langkah Tambahan</h3>
+                    <div class="bg-white border-2 border-black p-6 font-medium text-sm space-y-4">
+                        <p>1. **Install Package Pendukung**:</p>
+                        <ul class="list-disc list-inside text-slate-600 pl-4 space-y-1">
+                            <li>Untuk Excel/CSV: <code>composer require maatwebsite/excel</code></li>
+                            <li>Untuk PDF: <code>composer require barryvdh/laravel-dompdf</code></li>
+                        </ul>
+                        <p>2. **Penerapan Route**:</p>
+                        <code class="bg-black text-white p-3 font-mono text-xs block">Route::get('products/export-excel', fn() => Excel::download(new ProductExport, 'products.xlsx'));</code>
                     </div>
                 </section>
 
@@ -551,7 +638,7 @@
                     <p class="text-black leading-relaxed font-medium mb-6">
                         Salah ketik nama model atau relasi? Gunakan `exam:undo` untuk mengembalikan file yang dimodifikasi ke versi backup aslinya dan menghapus file yang baru digenerate secara aman.
                     </p>
-                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000] mb-8">
                         <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
                             <span class="text-xs font-mono font-bold">CLI Command</span>
                         </div>
@@ -562,6 +649,11 @@
                             </button>
                         </div>
                     </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Keamanan Tambahan</h3>
+                    <p class="text-black text-sm font-medium leading-relaxed">
+                        Tiap kali perintah generator berjalan (seperti <code>exam:add</code>, <code>exam:auth</code>, dll.), package akan menyalin versi asli file target ke folder backup <code>storage/exam-boots/backups/</code> dan menulis riwayat di <code>history.json</code>. Begitu perintah undo dijalankan, semua backup akan di-restore ke kondisi awal secara presisi.
+                    </p>
                 </section>
 
                 <!-- Section: Admin Seeder -->
@@ -573,7 +665,7 @@
                     <p class="text-black leading-relaxed font-medium mb-6">
                         Buat data dummy admin default secara instan untuk mempercepat proses testing login API/Web. Command ini men-generate class seeder dan mendaftarkannya langsung ke kelas `DatabaseSeeder.php`.
                     </p>
-                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
+                    <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000] mb-8">
                         <div class="bg-black px-6 py-3 border-b-2 border-black flex justify-between items-center text-white">
                             <span class="text-xs font-mono font-bold">CLI Command</span>
                         </div>
@@ -583,6 +675,13 @@
                                 <i class="fa-regular fa-copy"></i>
                             </button>
                         </div>
+                    </div>
+
+                    <h3 class="text-2xl font-black text-black mb-4 uppercase">Detail Default User</h3>
+                    <div class="bg-white border-2 border-black p-6 font-medium text-sm space-y-2">
+                        <p>👤 **Role**: Admin / Default user</p>
+                        <p>📧 **Email**: <code>admin@example.com</code> (atau email yang kamu spesifikasi via flag)</p>
+                        <p>🔑 **Password**: <code>password</code> (atau password yang kamu spesifikasi via flag)</p>
                     </div>
                 </section>
 
