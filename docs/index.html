@@ -48,7 +48,7 @@
                 </div>
                 <div>
                     <span class="font-extrabold text-2xl tracking-tight font-sans">Laravel Exam Boots</span>
-                    <span class="ml-2 text-xs bg-brutal-lime border-2 border-black text-black px-2 py-0.5 font-bold shadow-[1px_1px_0_0_#000]">v1.2.0</span>
+                    <span class="ml-2 text-xs bg-brutal-lime border-2 border-black text-black px-2 py-0.5 font-bold shadow-[1px_1px_0_0_#000]">v1.2.1</span>
                 </div>
             </div>
             <div class="flex items-center space-x-4">
@@ -94,11 +94,24 @@
             <!-- Sidebar Navigation (Brutalist styled) -->
             <aside class="lg:w-72 shrink-0">
                 <nav class="sticky top-28 space-y-8 bg-white border-4 border-black p-6 shadow-[6px_6px_0_0_#000]">
+                    <!-- Search Bar -->
+                    <div>
+                        <h3 class="text-sm font-black text-black uppercase tracking-wider mb-2 border-b-2 border-black pb-1">Cari Dokumentasi</h3>
+                        <div class="flex">
+                            <input type="text" id="docSearch" placeholder="Cari: auth, relation..." class="w-full bg-white text-black border-2 border-black px-3 py-2 text-sm font-bold shadow-[2px_2px_0_0_#000] focus:translate-x-[1px] focus:translate-y-[1px] focus:shadow-[1px_1px_0_0_#000] focus:outline-none">
+                        </div>
+                    </div>
                     <div>
                         <h3 class="text-sm font-black text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1">Persiapan</h3>
                         <ul class="space-y-2 text-sm">
                             <li><a href="#install" class="block py-1 px-2 font-bold text-black hover:bg-brutal-yellow hover:border-black border border-transparent transition-all"><i class="fa-solid fa-download w-5"></i> Instalasi</a></li>
                             <li><a href="#doctor" class="block py-1 px-2 font-bold text-black hover:bg-brutal-lime hover:border-black border border-transparent transition-all"><i class="fa-solid fa-user-doctor w-5"></i> Pre-flight Doctor</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-black text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1">Panduan Ujian</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="#guides" class="block py-1 px-2 font-bold text-black hover:bg-brutal-orange hover:border-black border border-transparent transition-all"><i class="fa-solid fa-compass w-5"></i> Alur Langkah Ujian</a></li>
                         </ul>
                     </div>
                     <div>
@@ -136,8 +149,15 @@
             </aside>
 
             <!-- Main Documentation Content -->
-            <div class="flex-1 space-y-20 max-w-4xl">
+            <div class="flex-1 space-y-20 max-w-4xl" id="contentContainer">
                 
+                <!-- No Results Card (Brutalist style) -->
+                <div id="noResults" class="hidden bg-brutal-pink border-4 border-black p-8 text-center shadow-[8px_8px_0_0_#000]">
+                    <i class="fa-solid fa-face-frown text-5xl mb-4 text-black"></i>
+                    <h3 class="text-2xl font-black uppercase">Hasil tidak ditemukan</h3>
+                    <p class="text-black font-bold mt-2">Coba gunakan kata kunci lain seperti "auth", "add", "relation", "test", atau "undo".</p>
+                </div>
+
                 <!-- Section: Instalasi -->
                 <section id="install" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
                     <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
@@ -160,7 +180,7 @@
                             </li>
                             <li>Pastikan package ter-load dengan benar:
                                 <div class="bg-black text-white border-2 border-black px-4 py-2.5 font-mono text-sm mt-2 flex items-center justify-between">
-                                    <span id="listStep">php artisan exam</span>
+                                    <span id="listStep">php artisan list | grep exam</span>
                                     <button onclick="copyText('listStep', this)" class="text-brutal-yellow hover:text-white transition-colors">
                                         <i class="fa-regular fa-copy"></i>
                                     </button>
@@ -180,29 +200,119 @@
                         Sebelum mulai ujian, pastikan lingkungan development kamu sudah siap dengan perintah `exam:doctor`. Perintah ini meminimalkan potensi kegagalan di tengah jalan akibat masalah konfigurasi DB atau PHP.
                     </p>
                     <div class="border-4 border-black overflow-hidden shadow-[6px_6px_0_0_#000]">
-                        <div class="p-6 font-mono text-xs md:text-sm leading-relaxed text-emerald-400 bg-black overflow-x-auto">
-                            <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3 text-white">
-                                <span>php artisan exam:doctor</span>
+                        <div class="p-6 bg-black text-white">
+                            <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                                <span class="font-mono text-xs md:text-sm text-emerald-400">php artisan exam:doctor</span>
                                 <button onclick="copyTextStr('php artisan exam:doctor', this)" class="text-slate-400 hover:text-white transition-colors">
-                                    <i class="fa-regular fa-copy"></i>
+                                    <i class="fa-regular fa-copy text-xs"></i>
                                 </button>
                             </div>
-                            <pre class="font-mono text-xs md:text-sm whitespace-pre text-left text-emerald-400">🏥 Laravel Exam Boots — Environment Doctor
+                            <div class="font-mono text-xs md:text-sm text-left">
+                                <p class="text-brutal-yellow font-extrabold mb-4">🏥 Laravel Exam Boots — Environment Doctor</p>
+                                
+                                <div class="border-2 border-white overflow-hidden mb-4">
+                                    <table class="w-full text-left font-mono">
+                                        <thead>
+                                            <tr class="bg-white text-black border-b-2 border-white font-extrabold">
+                                                <th class="px-3 py-2">Check</th>
+                                                <th class="px-3 py-2">Status</th>
+                                                <th class="px-3 py-2">Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-800">
+                                            <tr>
+                                                <td class="px-3 py-1.5 font-bold text-white">PHP Version</td>
+                                                <td class="px-3 py-1.5"><span class="bg-emerald-500 text-black px-1.5 py-0.5 text-[10px] font-bold">✅ OK</span></td>
+                                                <td class="px-3 py-1.5 text-slate-300">8.3.12</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-1.5 font-bold text-white">Laravel Structure</td>
+                                                <td class="px-3 py-1.5"><span class="bg-emerald-500 text-black px-1.5 py-0.5 text-[10px] font-bold">✅ OK</span></td>
+                                                <td class="px-3 py-1.5 text-slate-300">Laravel 11+ (modern)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-1.5 font-bold text-white">.env File</td>
+                                                <td class="px-3 py-1.5"><span class="bg-emerald-500 text-black px-1.5 py-0.5 text-[10px] font-bold">✅ OK</span></td>
+                                                <td class="px-3 py-1.5 text-slate-300">Ditemukan</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-1.5 font-bold text-white">APP_KEY</td>
+                                                <td class="px-3 py-1.5"><span class="bg-emerald-500 text-black px-1.5 py-0.5 text-[10px] font-bold">✅ OK</span></td>
+                                                <td class="px-3 py-1.5 text-slate-300">Sudah diset</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-1.5 font-bold text-white">APP_DEBUG</td>
+                                                <td class="px-3 py-1.5"><span class="bg-emerald-500 text-black px-1.5 py-0.5 text-[10px] font-bold">✅ OK</span></td>
+                                                <td class="px-3 py-1.5 text-slate-300">Debug aktif</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-1.5 font-bold text-white">Database Connection</td>
+                                                <td class="px-3 py-1.5"><span class="bg-emerald-500 text-black px-1.5 py-0.5 text-[10px] font-bold">✅ OK</span></td>
+                                                <td class="px-3 py-1.5 text-slate-300">Koneksi berhasil (mysql)</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-1.5 font-bold text-white">Pending Migrations</td>
+                                                <td class="px-3 py-1.5"><span class="bg-emerald-500 text-black px-1.5 py-0.5 text-[10px] font-bold">✅ OK</span></td>
+                                                <td class="px-3 py-1.5 text-slate-300">Semua migration up-to-date</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="px-3 py-1.5 font-bold text-white">Storage Link</td>
+                                                <td class="px-3 py-1.5"><span class="bg-red-500 text-black px-1.5 py-0.5 text-[10px] font-bold">❌ FAIL</span></td>
+                                                <td class="px-3 py-1.5 text-rose-400 font-bold">Belum dilink!</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="text-rose-400 font-bold mt-2">⚠️ Storage Link bermasalah. Jalankan: php artisan storage:link</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-┌──────────────────────┬──────────┬─────────────────────────┐
-│ Check                │ Status   │ Details                 │
-├──────────────────────┼──────────┼─────────────────────────┤
-│ PHP Version          │ ✅ OK    │ 8.3.12                  │
-│ Laravel Structure    │ ✅ OK    │ Laravel 11+ (modern)    │
-│ .env File            │ ✅ OK    │ Ditemukan               │
-│ APP_KEY              │ ✅ OK    │ Sudah diset             │
-│ APP_DEBUG            │ ✅ OK    │ Debug aktif             │
-│ Database Connection  │ ✅ OK    │ Koneksi berhasil (mysql)│
-│ Pending Migrations   │ ✅ OK    │ Semua migration up-to-date│
-│ Storage Link         │ ❌ Fail  │ Belum dilink!           │
-└──────────────────────┴──────────┴─────────────────────────┘
+                <!-- Section: Step-by-Step Guides -->
+                <section id="guides" class="scroll-mt-24 bg-white border-4 border-black p-8 shadow-[8px_8px_0_0_#000]">
+                    <h2 class="text-4xl font-extrabold font-sans text-black mb-6 flex items-center space-x-3 uppercase">
+                        <i class="fa-solid fa-compass"></i>
+                        <span>Alur Langkah Pengerjaan Ujian</span>
+                    </h2>
+                    <p class="text-black leading-relaxed font-medium mb-8">
+                        Ikuti langkah taktis berikut untuk menyelesaikan pengerjaan boilerplate ujian secara instan, aman, dan 100% siap di-test:
+                    </p>
 
-<span class="text-rose-400 font-bold">⚠️ Storage Link bermasalah. Jalankan: php artisan storage:link</span></pre>
+                    <div class="space-y-6">
+                        <!-- Step 1 -->
+                        <div class="border-2 border-black p-6 bg-brutal-yellow shadow-[4px_4px_0_0_#000] relative">
+                            <span class="absolute -top-4 -left-4 bg-black text-white border-2 border-black px-3 py-1 font-black text-sm shadow-[2px_2px_0_0_#fff]">Langkah 1</span>
+                            <h3 class="text-lg font-black uppercase mt-2">Pre-flight Check & Inisiasi Database</h3>
+                            <p class="text-sm font-medium mt-1">Jalankan <code>php artisan exam:doctor</code> untuk memastikan PHP, konfigurasi `.env`, dan koneksi database kamu terhubung dengan benar.</p>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="border-2 border-black p-6 bg-brutal-lime shadow-[4px_4px_0_0_#000] relative">
+                            <span class="absolute -top-4 -left-4 bg-black text-white border-2 border-black px-3 py-1 font-black text-sm shadow-[2px_2px_0_0_#fff]">Langkah 2</span>
+                            <h3 class="text-lg font-black uppercase mt-2">Setup Autentikasi & Akun Awal</h3>
+                            <p class="text-sm font-medium mt-1">Setup authentication project kamu menggunakan <code>php artisan exam:auth</code> (JWT atau Sanctum). Selanjutnya, jalankan <code>php artisan exam:seed-admin</code> untuk membuat akun admin default guna mempermudah login.</p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="border-2 border-black p-6 bg-brutal-cyan shadow-[4px_4px_0_0_#000] relative">
+                            <span class="absolute -top-4 -left-4 bg-black text-white border-2 border-black px-3 py-1 font-black text-sm shadow-[2px_2px_0_0_#fff]">Langkah 3</span>
+                            <h3 class="text-lg font-black uppercase mt-2">Pembuatan Modul CRUD Relasional</h3>
+                            <p class="text-sm font-medium mt-1">Gunakan flag relasi saat membuat modul CRUD: <code>php artisan exam:add Product --belongsTo=Category --with-factory --upload=image --enum=status:active,inactive --soft-deletes</code>. Ini otomatis menyusun arsitektur relasi induk-anak, validasi upload, enum, dan soft deletes.</p>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="border-2 border-black p-6 bg-brutal-pink shadow-[4px_4px_0_0_#000] relative">
+                            <span class="absolute -top-4 -left-4 bg-black text-white border-2 border-black px-3 py-1 font-black text-sm shadow-[2px_2px_0_0_#fff]">Langkah 4</span>
+                            <h3 class="text-lg font-black uppercase mt-2">Implementasi Standardisasi API & Pengujian</h3>
+                            <p class="text-sm font-medium mt-1">Eject standardisasi Response menggunakan <code>php artisan exam:response</code>. Daftarkan Policy model via <code>exam:policy</code>. Terakhir, jalankan <code>php artisan exam:test {Model}</code> dan jalankan test-suite project kamu dengan <code>php artisan test</code>.</p>
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div class="border-2 border-black p-6 bg-white shadow-[4px_4px_0_0_#000] relative">
+                            <span class="absolute -top-4 -left-4 bg-black text-white border-2 border-black px-3 py-1 font-black text-sm shadow-[2px_2px_0_0_#000]">Langkah 5</span>
+                            <h3 class="text-lg font-black uppercase mt-2">Rollback Jika Terjadi Kesalahan</h3>
+                            <p class="text-sm font-medium mt-1">Salah mengetik kolom relasi atau nama model? Tenang! Cukup ketikkan <code>php artisan exam:undo</code> untuk mengembalikan project ke kondisi pristine semula secara otomatis.</p>
                         </div>
                     </div>
                 </section>
@@ -521,8 +631,35 @@
         </div>
     </footer>
 
-    <!-- Simple Copy script -->
+    <!-- Search Engine & Copy script -->
     <script>
+        // Live Search Engine (Brutalist client-side search)
+        document.getElementById('docSearch').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const sections = document.querySelectorAll('#contentContainer > section');
+            let visibleCount = 0;
+
+            sections.forEach(section => {
+                const title = section.querySelector('h2').innerText.toLowerCase();
+                const content = section.innerText.toLowerCase();
+                
+                if (title.includes(query) || content.includes(query)) {
+                    section.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+
+            const noResults = document.getElementById('noResults');
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        });
+
+        // Copy Text Helpers
         function copyText(id, btn) {
             const text = document.getElementById(id).innerText;
             navigator.clipboard.writeText(text).then(() => {
@@ -533,6 +670,7 @@
                 }, 2000);
             });
         }
+        
         function copyTextStr(text, btn) {
             navigator.clipboard.writeText(text).then(() => {
                 const icon = btn.querySelector('i');
