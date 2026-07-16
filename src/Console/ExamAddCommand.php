@@ -141,8 +141,8 @@ class ExamAddCommand extends Command
                 'id'       => 'controller',
                 'label'    => 'Controller',
                 'stub'     => $isWeb ? ($stubDir . 'web-controller.stub') : ($stubDir . ($isEloquent ? 'controller.stub' : 'controller.blank.stub')),
-                'target'   => app_path("Http/Controllers/{$modelName}Controller.php"),
-                'filename' => "{$modelName}Controller.php",
+                'target'   => $isWeb ? app_path("Http/Controllers/{$modelName}Controller.php") : app_path("Http/Controllers/Api/{$modelName}Controller.php"),
+                'filename' => $isWeb ? "{$modelName}Controller.php" : "Api/{$modelName}Controller.php",
             ],
             [
                 'id'       => 'service',
@@ -246,6 +246,15 @@ class ExamAddCommand extends Command
 
             // Read stub content and replace placeholders
             $content = File::get($file['stub']);
+
+            if ($file['id'] === 'controller' && ! $isWeb) {
+                $content = str_replace(
+                    'namespace App\Http\Controllers;',
+                    "namespace App\Http\Controllers\Api;\n\nuse App\Http\Controllers\Controller;",
+                    $content
+                );
+            }
+
             $content = str_replace(
                 [
                     '{{ModelName}}',
@@ -401,7 +410,7 @@ PHP;
             $routeContent = File::get($routePath);
             $routeLine = $isWeb 
                 ? "Route::resource('{$tableName}', \\App\\Http\\Controllers\\{$modelName}Controller::class);"
-                : "Route::apiResource('{$tableName}', \\App\\Http\\Controllers\\{$modelName}Controller::class);";
+                : "Route::apiResource('{$tableName}', \\App\\Http\\Controllers\\Api\\{$modelName}Controller::class);";
 
             if (! str_contains($routeContent, "{$modelName}Controller::class")) {
                 if ($this->modifyFile($routePath, $routeContent . "\n" . $routeLine, 'Registered resource route')) {
@@ -422,7 +431,7 @@ PHP;
             if ($this->confirm("Terdeteksi relasi belongsTo({$primaryParent}). Daftarkan sebagai nested route? (/{$parentPluralKebab}/{parent}/{$childPluralKebab})", true)) {
                 $apiRoutePath = base_path('routes/api.php');
                 if (File::exists($apiRoutePath)) {
-                    $routeInject = "\nRoute::apiResource('{$parentPluralKebab}.{$childPluralKebab}', \\App\\Http\\Controllers\\{$modelName}Controller::class);";
+                    $routeInject = "\nRoute::apiResource('{$parentPluralKebab}.{$childPluralKebab}', \\App\\Http\\Controllers\\Api\\{$modelName}Controller::class);";
                     if ($this->modifyFile($apiRoutePath, File::get($apiRoutePath) . $routeInject, 'Registered nested resource route')) {
                         $registeredNested = true;
                     }

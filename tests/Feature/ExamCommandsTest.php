@@ -28,6 +28,14 @@ class ExamCommandsTest extends TestCase
         }
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        if (File::exists(storage_path('exam-boots'))) {
+            File::deleteDirectory(storage_path('exam-boots'));
+        }
+    }
+
     public function test_it_can_run_doctor_check(): void
     {
         $this->artisan('exam:doctor')
@@ -91,7 +99,7 @@ class ExamCommandsTest extends TestCase
         $enumFile = app_path('Enums/Status.php');
         $factoryFile = database_path('factories/TestProductFactory.php');
         $seederFile = database_path('seeders/TestProductSeeder.php');
-        $controllerFile = app_path('Http/Controllers/TestProductController.php');
+        $controllerFile = app_path('Http/Controllers/Api/TestProductController.php');
         $serviceFile = app_path('Services/TestProductService.php');
         $requestFile = app_path('Http/Requests/TestProductRequest.php');
         $resourceFile = app_path('Http/Resources/TestProductResource.php');
