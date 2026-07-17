@@ -231,14 +231,15 @@ php artisan forge:auth --method=jwt
 php artisan forge:auth --method=sanctum
 ```
 
-Yang akan dihasilkan:
-- API scaffolding (jika belum terinstall)
-- AuthController dengan register, login, logout, me
-- Konfigurasi guard (JWT/Sanctum)
-- User model dengan method/trait auth
-- Route auth di `routes/api.php`
-- Scramble API docs (opsional)
-- **Auto Guard Config** — generator `forge:add` otomatis membaca metode auth dari config
+Yang akan dihasilkan (menggunakan standar arsitektur **Model-Service-Controller (MSC)**):
+- **Service Layer** — `app/Services/AuthService.php` yang menangani register, login, logout, dan token refresh.
+- **Form Requests** — `app/Http/Requests/Auth/LoginRequest.php` & `app/Http/Requests/Auth/RegisterRequest.php` untuk validasi.
+- **API Resource** — `app/Http/Resources/UserResource.php` sebagai wrapper serialize response user yang bersih.
+- **Controller** — `app/Http/Controllers/Api/AuthController.php` (atau `AuthController.php` di mode non-API) yang menyuntikkan `AuthService`.
+- **User Model** — Model `User` terkonfigurasi otomatis dengan trait auth (JWT/Sanctum).
+- **Route Auth** — Auto-append ke `routes/api.php` (atau `routes/web.php` di mode non-API).
+- **API Scaffolding & Config** — Setup config JWT/Sanctum secara terotomatisasi.
+- **Scramble API docs** (opsional) — Dokumentasi API dinamis langsung aktif.
 
 ---
 

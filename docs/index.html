@@ -50,7 +50,7 @@
                 </div>
                 <div>
                     <span class="font-extrabold text-2xl tracking-tight font-sans">Laravel Exam Boots</span>
-                    <span class="ml-2 text-xs bg-brutal-lime border-2 border-black text-black px-2 py-0.5 font-bold shadow-[1px_1px_0_0_#000]">v1.2.5</span>
+                    <span class="ml-2 text-xs bg-brutal-lime border-2 border-black text-black px-2 py-0.5 font-bold shadow-[1px_1px_0_0_#000]">v1.3.0</span>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -570,15 +570,31 @@
                     </div>
 
                     <h3 class="text-2xl font-black text-black mb-4 uppercase">File yang Dihasilkan</h3>
-                    <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="border-2 border-black p-4 bg-white shadow-[2px_2px_0_0_#000]">
                             <h4 class="font-extrabold text-sm text-black">1. AuthController</h4>
-                            <p class="text-xs font-mono text-slate-500 mt-1">API: app/Http/Controllers/Api/DocsAuthController.php</p>
-                            <p class="text-xs font-mono text-slate-500">Web: app/Http/Controllers/DocsAuthController.php</p>
-                            <p class="text-sm text-black mt-2 font-medium">Berisi method <code>register()</code>, <code>login()</code>, <code>me()</code>, dan <code>logout()</code>.</p>
+                            <p class="text-xs font-mono text-slate-500 mt-1">API: app/Http/Controllers/Api/AuthController.php</p>
+                            <p class="text-xs font-mono text-slate-500">Web: app/Http/Controllers/AuthController.php</p>
+                            <p class="text-sm text-black mt-2 font-medium">Controller yang menyuntikkan <code>AuthService</code> dan menangani input-output HTTP secara bersih.</p>
                         </div>
                         <div class="border-2 border-black p-4 bg-white shadow-[2px_2px_0_0_#000]">
-                            <h4 class="font-extrabold text-sm text-black">2. Route Registration</h4>
+                            <h4 class="font-extrabold text-sm text-black">2. AuthService</h4>
+                            <p class="text-xs font-mono text-slate-500 mt-1">Path: app/Services/AuthService.php</p>
+                            <p class="text-sm text-black mt-2 font-medium">Layer bisnis untuk memisahkan logic otentikasi (login, register, logout, refresh) dari Controller.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-white shadow-[2px_2px_0_0_#000]">
+                            <h4 class="font-extrabold text-sm text-black">3. Form Requests</h4>
+                            <p class="text-xs font-mono text-slate-500 mt-1">Login: app/Http/Requests/Auth/LoginRequest.php</p>
+                            <p class="text-xs font-mono text-slate-500">Register: app/Http/Requests/Auth/RegisterRequest.php</p>
+                            <p class="text-sm text-black mt-2 font-medium">Validasi input terpisah untuk menjaga kebersihan controller.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-white shadow-[2px_2px_0_0_#000]">
+                            <h4 class="font-extrabold text-sm text-black">4. UserResource</h4>
+                            <p class="text-xs font-mono text-slate-500 mt-1">Path: app/Http/Resources/UserResource.php</p>
+                            <p class="text-sm text-black mt-2 font-medium">Wrapper API Resource untuk memformat response payload user.</p>
+                        </div>
+                        <div class="border-2 border-black p-4 bg-white shadow-[2px_2px_0_0_#000] md:col-span-2">
+                            <h4 class="font-extrabold text-sm text-black">5. Route Registration</h4>
                             <p class="text-xs font-mono text-slate-500 mt-1">API: routes/api.php</p>
                             <p class="text-xs font-mono text-slate-500">Web: routes/web.php</p>
                             <p class="text-sm text-black mt-2 font-medium">Didaftarkan otomatis dengan grup route dan middleware protection yang sesuai (<code>auth:sanctum</code> atau <code>auth:api</code>).</p>
