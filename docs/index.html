@@ -53,10 +53,11 @@
                     <span class="ml-2 text-xs bg-brutal-lime border-2 border-black text-black px-2 py-0.5 font-bold shadow-[1px_1px_0_0_#000]">v1.2.6</span>
                 </div>
             </div>
-            <div class="flex items-center space-x-4">
-                <a href="https://packagist.org" target="_blank" class="text-sm font-bold text-black hover:underline">
-                    <i class="fa-solid fa-box-open mr-1"></i> Packagist
-                </a>
+            <div class="flex items-center gap-2">
+                <div class="hidden sm:flex items-center bg-white border-2 border-black shadow-[2px_2px_0_0_#000]">
+                    <i class="fa-solid fa-search text-black px-3 text-sm"></i>
+                    <input type="text" id="headerSearch" placeholder="Cari: auth, crud, install, export..." class="w-48 lg:w-64 py-2 pr-3 text-sm font-bold text-black focus:outline-none placeholder:text-slate-400">
+                </div>
                 <a href="#install" class="bg-brutal-orange text-black border-2 border-black px-4 py-2 font-extrabold text-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_0_#000] transition-all shadow-[4px_4px_0_0_#000]">
                     Mulai Belajar <i class="fa-solid fa-arrow-right ml-1"></i>
                 </a>
@@ -1077,30 +1078,104 @@
 
     <!-- Search Engine & Copy script -->
     <script>
-        // Live Search Engine (Brutalist client-side search)
-        document.getElementById('docSearch').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase().trim();
+        // Live Search Engine with relevance ranking
+        function performSearch(query) {
+            query = query.toLowerCase().trim();
             const sections = document.querySelectorAll('#contentContainer > section');
-            let visibleCount = 0;
+            const noResults = document.getElementById('noResults');
+            let anyVisible = false;
+
+            // Relevance map: section -> score
+            const scored = [];
 
             sections.forEach(section => {
+                const id = section.id.toLowerCase();
                 const title = section.querySelector('h2').innerText.toLowerCase();
                 const content = section.innerText.toLowerCase();
-                
-                if (title.includes(query) || content.includes(query)) {
-                    section.style.display = 'block';
-                    visibleCount++;
-                } else {
-                    section.style.display = 'none';
+
+                let score = 0;
+
+                // Exact title match = highest priority
+                if (title === query) score += 100;
+                // Title starts with query
+                else if (title.startsWith(query)) score += 80;
+                // Title includes query
+                else if (title.includes(query)) score += 60;
+
+                // ID match
+                if (id === query) score += 50;
+                else if (id.includes(query)) score += 40;
+                // ID partial: "auth" matches "autentikasi" via related keywords
+                else if (query.includes(id) || id.includes(query)) score += 30;
+
+                // Content match
+                if (content.includes(query)) score += 20;
+
+                // Bonus: Indonesian keywords mapped to section IDs
+                const keywords = {
+                    'auth': ['autentikasi', 'login', 'register', 'logout', 'jwt', 'sanctum', 'token', 'password', 'guard'],
+                    'add': ['crud', 'generate', 'model', 'migration', 'controller', 'service'],
+                    'install': ['setup', 'one-shot', 'pasang'],
+                    'install-oneclick': ['one-shot', 'instalasi cepat', 'all in one'],
+                    'doctor': ['cek', 'check', 'diagnosa', 'environment', 'lingkungan'],
+                    'guides': ['langkah', 'panduan', 'alur', 'tutorial', 'step'],
+                    'response': ['api response', 'trait', 'json', 'format response'],
+                    'policy': ['authorization', 'otorisasi', 'hak akses', 'permission'],
+                    'relation': ['relasi', 'hasmany', 'belongsto', 'hasone'],
+                    'test': ['pengujian', 'testing', 'phpunit', 'pest'],
+                    'export': ['ekspor', 'excel', 'pdf', 'print'],
+                    'undo': ['rollback', 'kembalikan', 'revert', 'batal', 'prune'],
+                    'seed-admin': ['seeder', 'admin user', 'user default', 'dummy'],
+                    'cheatsheet': ['referensi', 'ringkasan', 'command list', 'cepat'],
+                    'scramble': ['api docs', 'dokumentasi', 'swagger', 'openapi'],
+                };
+
+                for (const [sid, terms] of Object.entries(keywords)) {
+                    if (sid === id && terms.some(t => query.includes(t) || t.includes(query))) {
+                        score += 35;
+                    }
+                }
+
+                scored.push({ el: section, score, id, title });
+            });
+
+            // Sort by score descending
+            scored.sort((a, b) => b.score - a.score);
+
+            // Hide all first
+            sections.forEach(s => s.style.display = 'none');
+
+            // Show matching (score > 0)
+            scored.forEach(item => {
+                if (item.score > 0) {
+                    item.el.style.display = 'block';
+                    anyVisible = true;
                 }
             });
 
-            const noResults = document.getElementById('noResults');
-            if (visibleCount === 0) {
+            if (query === '') {
+                // Show all when query is empty
+                sections.forEach(s => s.style.display = 'block');
+                noResults.classList.add('hidden');
+            } else if (!anyVisible) {
                 noResults.classList.remove('hidden');
             } else {
                 noResults.classList.add('hidden');
             }
+        }
+
+        // Bind both search inputs with two-way sync
+        function syncSearch(value) {
+            performSearch(value);
+            document.getElementById('docSearch').value = value;
+            document.getElementById('headerSearch').value = value;
+        }
+
+        document.getElementById('docSearch').addEventListener('input', function(e) {
+            syncSearch(e.target.value);
+        });
+        document.getElementById('headerSearch').addEventListener('input', function(e) {
+            syncSearch(e.target.value);
         });
 
         // Copy Text Helpers
