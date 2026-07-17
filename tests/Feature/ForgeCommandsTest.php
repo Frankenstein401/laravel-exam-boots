@@ -40,14 +40,14 @@ class ForgeCommandsTest extends TestCase
     {
         $this->artisan('forge:doctor')
             ->assertSuccessful()
-            ->expectsOutputToContain('🏥');
+            ->expectsOutputToContain('Environment Doctor');
     }
 
     public function test_it_can_display_cheatsheet(): void
     {
         $this->artisan('forge:cheatsheet')
             ->assertSuccessful()
-            ->expectsOutputToContain('🥾');
+            ->expectsOutputToContain('GENERATE BOILERPLATE');
     }
 
     public function test_it_can_generate_admin_user_seeder_and_undo_it(): void
@@ -66,7 +66,7 @@ class ForgeCommandsTest extends TestCase
         $this->assertStringContainsString('adminpass', File::get($seederFile));
 
         // Read the timestamp from history.json to construct exact question
-        $historyFile = storage_path('exam-boots/history.json');
+        $historyFile = storage_path('forge-boots/history.json');
         $history = json_decode(File::get($historyFile), true);
         $lastEntry = end($history);
         $timestamp = $lastEntry['timestamp'];
@@ -159,7 +159,7 @@ class ForgeCommandsTest extends TestCase
         $this->assertStringContainsString("'status' => ['required', new \Illuminate\Validation\Rules\Enum(\App\Enums\Status::class)],", $requestContent);
 
         // Read the timestamp from history.json to construct exact question
-        $historyFile = storage_path('exam-boots/history.json');
+        $historyFile = storage_path('forge-boots/history.json');
         $history = json_decode(File::get($historyFile), true);
         $lastEntry = end($history);
         $timestamp = $lastEntry['timestamp'];
@@ -210,7 +210,7 @@ class ForgeCommandsTest extends TestCase
         $this->assertStringNotContainsString('// Original Content', $overwrittenContent);
 
         // Get timestamp for undo prompt
-        $historyFile = storage_path('exam-boots/history.json');
+        $historyFile = storage_path('forge-boots/history.json');
         $history = json_decode(File::get($historyFile), true);
         $lastEntry = end($history);
         $timestamp = $lastEntry['timestamp'];

@@ -1,81 +1,79 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace {{Namespace}};
 
-use App\Models\User;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Resources\UserResource;
+use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Exception;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     * Apply JWT middleware to all routes except login and register.
-     */
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
+    public function __construct(
+        private readonly AuthService $authService
+    ) {}
 
     /**
      * Register a new user and return a JWT token.
      */
-    public function register(Request $request): JsonResponse
+    public function register(RegisterRequest $request): JsonResponse
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        try {
+            $result = $this->authService->register($request->validated());
 
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $token = auth('api')->login($user);
-
-        return response()->json([
-            'status'        => 'success',
-            'message'       => 'User registered successfully',
-            'data'          => $user,
-            'authorization' => [
-                'token' => $token,
-                'type'  => 'bearer',
-            ],
-        ], 201);
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'User registered successfully',
+                'data'    => [
+                    'user'          => new UserResource($result['user']),
+                    'authorization' => [
+                        'token' => $result['token'],
+                        'type'  => 'bearer',
+                    ]
+                ],
+            ], 201);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage() ?: 'Failed to register user.',
+            ], 500);
+        }
     }
 
     /**
      * Authenticate user and return a JWT token.
      */
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $request->validate([
-            'email'    => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        try {
+            $result = $this->authService->login($request->validated());
 
-        $credentials = $request->only('email', 'password');
-        $token = auth('api')->attempt($credentials);
-
-        if (! $token) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Login successfully',
+                'data'    => [
+                    'user'          => new UserResource($result['user']),
+                    'authorization' => [
+                        'token' => $result['token'],
+                        'type'  => 'bearer',
+                    ]
+                ],
+            ]);
+        } catch (\Illuminate\Auth\AuthenticationException $e) {
             return response()->json([
                 'status'  => 'error',
-                'message' => 'Email atau password salah',
+                'message' => $e->getMessage(),
             ], 401);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Something went wrong on our server.',
+            ], 500);
         }
-
-        return response()->json([
-            'status'        => 'success',
-            'data'          => auth('api')->user(),
-            'authorization' => [
-                'token' => $token,
-                'type'  => 'bearer',
-            ],
-        ]);
     }
 
     /**
@@ -83,12 +81,19 @@ class AuthController extends Controller
      */
     public function logout(): JsonResponse
     {
-        auth('api')->logout();
+        try {
+            $this->authService->logout();
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Successfully logged out',
-        ]);
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Logout successfully',
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Failed to logout.',
+            ], 500);
+        }
     }
 
     /**
@@ -96,13 +101,25 @@ class AuthController extends Controller
      */
     public function refresh(): JsonResponse
     {
-        return response()->json([
-            'status'        => 'success',
-            'authorization' => [
-                'token' => auth('api')->refresh(),
-                'type'  => 'bearer',
-            ],
-        ]);
+        try {
+            $newToken = $this->authService->refresh();
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Refresh token successfully',
+                'data'    => [
+                    'authorization' => [
+                        'token' => $newToken,
+                        'type'  => 'bearer',
+                    ]
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Token is invalid or expired',
+            ], 401);
+        }
     }
 
     /**
@@ -111,8 +128,9 @@ class AuthController extends Controller
     public function me(): JsonResponse
     {
         return response()->json([
-            'status' => 'success',
-            'data'   => auth('api')->user(),
+            'status'  => 'success',
+            'message' => 'Get user profile successfully',
+            'data'    => new UserResource(auth('api')->user()),
         ]);
     }
 }

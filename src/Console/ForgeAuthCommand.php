@@ -148,47 +148,70 @@ class ForgeAuthCommand extends Command
         }
 
         // =============================================
-        // Step 5: Generate AuthController
+        // Step 5: Generate Auth Components (Service, Requests, Resource, Controller)
         // =============================================
-        $controllerPath = app_path('Http/Controllers/AuthController.php');
+        $this->components->info('Generating Auth Components (Service, Requests, Resource, Controller)...');
+
+        $servicePath = app_path('Services/AuthService.php');
+        $serviceStub = $stubDir . ($isJwt ? 'auth-service.jwt.stub' : 'auth-service.sanctum.stub');
+        if (File::exists($serviceStub)) {
+            $this->writeFile($servicePath, File::get($serviceStub));
+            $this->addResult('AuthService', '✅ Created');
+        }
+
+        $loginRequestPath = app_path('Http/Requests/Auth/LoginRequest.php');
+        $loginRequestStub = $stubDir . 'auth-request-login.stub';
+        if (File::exists($loginRequestStub)) {
+            $this->writeFile($loginRequestPath, File::get($loginRequestStub));
+            $this->addResult('LoginRequest', '✅ Created');
+        }
+
+        $registerRequestPath = app_path('Http/Requests/Auth/RegisterRequest.php');
+        $registerRequestStub = $stubDir . 'auth-request-register.stub';
+        if (File::exists($registerRequestStub)) {
+            $this->writeFile($registerRequestPath, File::get($registerRequestStub));
+            $this->addResult('RegisterRequest', '✅ Created');
+        }
+
+        $userResourcePath = app_path('Http/Resources/UserResource.php');
+        $userResourceStub = $stubDir . 'auth-user-resource.stub';
+        if (File::exists($userResourceStub)) {
+            $this->writeFile($userResourcePath, File::get($userResourceStub));
+            $this->addResult('UserResource', '✅ Created');
+        }
+
+        $controllerSubdir = $useApi ? 'Api/' : '';
+        $controllerNamespace = $useApi ? 'App\\Http\\Controllers\\Api' : 'App\\Http\\Controllers';
+        $controllerPath = app_path("Http/Controllers/{$controllerSubdir}AuthController.php");
         $controllerStub = $stubDir . ($isJwt ? 'auth-controller.jwt.stub' : 'auth-controller.sanctum.stub');
 
-        if (File::exists($controllerPath)) {
-            if ($this->confirmOverwrite($controllerPath)) {
-                if (File::exists($controllerStub)) {
-                    $this->writeFile($controllerPath, File::get($controllerStub));
-                    $this->addResult('AuthController', '✅ Overwritten');
-                }
-            } else {
-                $this->addResult('AuthController', '⏭️ Skipped');
-            }
-        } else {
-            if (File::exists($controllerStub)) {
-                $this->writeFile($controllerPath, File::get($controllerStub));
-                $this->addResult('AuthController', '✅ Created');
-            }
+        if (File::exists($controllerStub)) {
+            $controllerContent = File::get($controllerStub);
+            $controllerContent = str_replace('{{Namespace}}', $controllerNamespace, $controllerContent);
+            $this->writeFile($controllerPath, $controllerContent);
+            $this->addResult('AuthController', '✅ Created');
         }
 
         // =============================================
         // Step 6: Append Auth Routes
         // =============================================
-        $apiRoutePath = base_path('routes/api.php');
+        $routeFilePath = $useApi ? base_path('routes/api.php') : base_path('routes/web.php');
         $routeStub = $stubDir . ($isJwt ? 'auth-routes.jwt.stub' : 'auth-routes.sanctum.stub');
 
-        if (! File::exists($apiRoutePath)) {
-            $this->components->error('File routes/api.php tidak ditemukan!');
-            $this->addResult('Auth Routes', '❌ routes/api.php not found');
+        if (! File::exists($routeFilePath)) {
+            $this->components->error("File {$routeFilePath} tidak ditemukan!");
+            $this->addResult('Auth Routes', '❌ routes file not found');
         } else {
-            $existingRoutes = File::get($apiRoutePath);
+            $existingRoutes = File::get($routeFilePath);
 
             if (str_contains($existingRoutes, 'AuthController')) {
-                if ($this->confirm('Auth routes sudah ada di api.php, apakah ingin menambahkan lagi?', false)) {
-                    $this->appendRoutes($routeStub, $apiRoutePath);
+                if ($this->confirm('Auth routes sudah ada di routes file, apakah ingin menambahkan lagi?', false)) {
+                    $this->appendRoutes($routeStub, $routeFilePath, $useApi);
                 } else {
                     $this->addResult('Auth Routes', '⏭️ Skipped (already exists)');
                 }
             } else {
-                $this->appendRoutes($routeStub, $apiRoutePath);
+                $this->appendRoutes($routeStub, $routeFilePath, $useApi);
             }
         }
 
@@ -340,9 +363,9 @@ class ForgeAuthCommand extends Command
     }
 
     /**
-     * Append route stub content to api.php.
+     * Append route stub content to routes file.
      */
-    private function appendRoutes(string $stubPath, string $apiRoutePath): void
+    private function appendRoutes(string $stubPath, string $routeFilePath, bool $useApi): void
     {
         if (! File::exists($stubPath)) {
             $this->addResult('Auth Routes', '❌ Route stub not found');
@@ -350,9 +373,13 @@ class ForgeAuthCommand extends Command
         }
 
         $routeContent = File::get($stubPath);
-        $newContent = File::get($apiRoutePath) . "\n" . $routeContent;
-        $this->modifyFile($apiRoutePath, $newContent, 'Appended auth routes to routes/api.php');
-        $this->addResult('Auth Routes', '✅ Appended to api.php');
+        if ($useApi) {
+            $routeContent = str_replace('App\\Http\\Controllers\\AuthController', 'App\\Http\\Controllers\\Api\\AuthController', $routeContent);
+        }
+        
+        $newContent = File::get($routeFilePath) . "\n" . $routeContent;
+        $this->modifyFile($routeFilePath, $newContent, 'Appended auth routes');
+        $this->addResult('Auth Routes', '✅ Appended');
     }
 
     /**

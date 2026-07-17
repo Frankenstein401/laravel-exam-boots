@@ -118,10 +118,9 @@ class ForgeAddCommand extends Command
         $resourceExtraStr = $this->buildResourceExtra($upload);
         $enumCastsStr = $this->buildEnumCasts($enums);
 
-        // Soft delete placeholders
         $softDeletesMigrationStr = $softDeletes ? "\$table->softDeletes();" : '';
         $softDeletesImportStr = $softDeletes ? "use Illuminate\Database\Eloquent\SoftDeletes;" : '';
-        $softDeletesTraitStr = $softDeletes ? "use Illuminate\Database\Eloquent\SoftDeletes;" : '';
+        $softDeletesTraitStr = $softDeletes ? ", SoftDeletes" : '';
 
         $filesToGenerate = [
             [

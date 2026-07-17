@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\User;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Support\Facades\Hash;
+
+class AuthService
+{
+    /**
+     * Authenticate user and return a Sanctum token and user data.
+     *
+     * @param array $credentials
+     * @throws AuthenticationException
+     * @return array{token: string, user: User}
+     */
+    public function login(array $credentials): array
+    {
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
+            throw new AuthenticationException('Email atau password salah');
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return [
+            'token' => $token,
+            'user'  => $user,
+        ];
+    }
+
+    /**
+     * Register a new user and return a Sanctum token and user data.
+     *
+     * @param array $data
+     * @return array{token: string, user: User}
+     */
+    public function register(array $data): array
+    {
+        $user = User::create([
+            'name'     => $data['name'],
+            'email'    => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return [
+            'token' => $token,
+            'user'  => $user,
+        ];
+    }
+
+    /**
+     * Logout the user (revoke Sanctum tokens).
+     *
+     * @param User $user
+     */
+    public function logout(User $user): void
+    {
+        $user->currentAccessToken()->delete();
+    }
+}
