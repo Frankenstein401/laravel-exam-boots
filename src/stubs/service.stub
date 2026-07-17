@@ -49,7 +49,7 @@ readonly class {{ModelName}}Service
     /**
      * Get a single {{modelNameLower}} by ID.
      */
-    public function getDetail{{ModelName}}($id)
+    public function getDetail{{ModelName}}(int $id): {{ModelName}}
     {
         return {{ModelName}}::findOrFail($id);
     }
@@ -57,7 +57,7 @@ readonly class {{ModelName}}Service
     /**
      * Create a new {{modelNameLower}} record.
      */
-    public function create{{ModelName}}(array $data)
+    public function create{{ModelName}}(array $data): {{ModelName}}
     {
         return {{ModelName}}::create($data);
     }
@@ -65,7 +65,7 @@ readonly class {{ModelName}}Service
     /**
      * Update an existing {{modelNameLower}} record.
      */
-    public function update{{ModelName}}($id, array $data)
+    public function update{{ModelName}}(int $id, array $data): {{ModelName}}
     {
         ${{modelNameLower}} = {{ModelName}}::findOrFail($id);
         ${{modelNameLower}}->update($data);

@@ -21,7 +21,8 @@ class ExamUndoCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:undo {id? : ID operasi spesifik, default: yang terakhir}';
+    protected $signature = 'exam:undo {id? : ID operasi spesifik, default: yang terakhir}
+                            {--prune : Bersihkan backup kedaluwarsa sebelum undo}';
 
     /**
      * The console command description.
@@ -74,6 +75,35 @@ class ExamUndoCommand extends Command
         $this->table(['Action', 'Filename', 'Full Path'], $rows);
         $this->newLine();
 
+        // --prune: Cleanup old backups before undo
+        $pruneCount = 0;
+        if ($this->option('prune')) {
+            $backupDir = storage_path('exam-boots/backups');
+            if (File::exists($backupDir)) {
+                $backupDirs = File::directories($backupDir);
+                $retentionDays = (int) config('exam-boots.backup.retention_days', 3);
+                $cutoff = now()->subDays($retentionDays);
+                $deleted = [];
+                foreach ($backupDirs as $dir) {
+                    $dirName = basename($dir);
+                    $dirDate = \DateTime::createFromFormat('Ymd_His', $dirName);
+                    if ($dirDate && $dirDate < $cutoff) {
+                        File::deleteDirectory($dir);
+                        $deleted[] = $dirName;
+                    }
+                }
+                $pruneCount = count($deleted);
+                if ($pruneCount > 0) {
+                    $this->components->info("🧹 Dibersihkan {$pruneCount} backup kedaluwarsa (retensi {$retentionDays} hari).");
+                } else {
+                    $this->components->info("✅ Semua backup masih dalam masa retensi ({$retentionDays} hari). Tidak ada yang dibersihkan.");
+                }
+            } else {
+                $this->components->info('📂 Tidak ada direktori backup untuk dibersihkan.');
+            }
+            $this->newLine();
+        }
+
         if (! $this->confirm("Apakah Anda yakin ingin me-revert/undo operasi {$entry['command']} ({$entry['timestamp']})?", true)) {
             $this->components->warn('Undo dibatalkan.');
             return self::SUCCESS;
@@ -111,6 +141,11 @@ class ExamUndoCommand extends Command
 
         $this->newLine();
         $this->components->info('🎉 Revert/Undo operasi berhasil diselesaikan.');
+
+        if (! $this->option('prune')) {
+            $this->newLine();
+            $this->components->warn('💡 Tips: Jalankan dengan --prune untuk membersihkan backup kedaluwarsa.');
+        }
 
         return self::SUCCESS;
     }

@@ -96,11 +96,6 @@ trait TracksFileOperations
 
         $existed = File::exists($path);
 
-        if (! $this->confirmOverwrite($path)) {
-            $this->components->warn("Skipped: " . basename($path));
-            return false;
-        }
-
         if ($existed) {
             $this->trackModify($path);
         }

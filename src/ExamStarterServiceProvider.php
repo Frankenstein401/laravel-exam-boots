@@ -10,6 +10,7 @@ use NamaKamu\LaravelExamBoots\Console\ExamAuthCommand;
 use NamaKamu\LaravelExamBoots\Console\ExamCheatsheetCommand;
 use NamaKamu\LaravelExamBoots\Console\ExamDoctorCommand;
 use NamaKamu\LaravelExamBoots\Console\ExamExportCommand;
+use NamaKamu\LaravelExamBoots\Console\ExamInstallCommand;
 use NamaKamu\LaravelExamBoots\Console\ExamPolicyCommand;
 use NamaKamu\LaravelExamBoots\Console\ExamRelationCommand;
 use NamaKamu\LaravelExamBoots\Console\ExamResponseCommand;
@@ -60,6 +61,7 @@ class ExamStarterServiceProvider extends ServiceProvider
                 ExamDoctorCommand::class,
                 ExamExportCommand::class,
                 ExamCheatsheetCommand::class,
+                ExamInstallCommand::class,
                 ExamUndoCommand::class,
                 ExamSeedAdminCommand::class,
             ]);

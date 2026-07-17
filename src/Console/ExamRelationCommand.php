@@ -280,6 +280,7 @@ PHP;
         $content = File::get($modelPath);
         $content = rtrim($content);
 
+        $methodName = '';
         if (preg_match('/public function (\w+)\(/', $methodCode, $matches)) {
             $methodName = $matches[1];
 
@@ -287,6 +288,11 @@ PHP;
                 $this->components->warn("Method {$methodName}() sudah ada di {$modelName} model, dilewati.");
                 return false;
             }
+        }
+
+        if (empty($methodName)) {
+            $this->components->error("Tidak dapat mengekstrak nama method dari kode relasi.");
+            return false;
         }
 
         $lastBracePos = strrpos($content, '}');

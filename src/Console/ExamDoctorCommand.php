@@ -98,7 +98,7 @@ class ExamDoctorCommand extends Command
         // 5. APP_DEBUG
         if ($envExists) {
             $appDebug = env('APP_DEBUG');
-            if ($appDebug === true || $appDebug === 'true' || env('APP_ENV') === 'local') {
+            if ($appDebug === true || $appDebug === 'true' || $appDebug === 1 || env('APP_ENV') === 'local') {
                 $results[] = ['Check' => 'APP_DEBUG', 'Status' => '✅ OK', 'Details' => 'Debug aktif (bagus untuk development)'];
                 $passedCount++;
             } else {
@@ -176,6 +176,48 @@ class ExamDoctorCommand extends Command
             $failedCount++;
         }
 
+        // 11. Backup Storage (retention check)
+        $backupDir = storage_path('exam-boots/backups');
+        $backupsExist = File::exists($backupDir) && File::directories($backupDir);
+        if ($backupsExist) {
+            $backupDirs = File::directories($backupDir);
+            $retentionDays = (int) config('exam-boots.backup.retention_days', 3);
+            $cutoff = now()->subDays($retentionDays);
+            $oldBackups = [];
+            foreach ($backupDirs as $dir) {
+                $dirName = basename($dir);
+                // Directory names are Ymd_His format from backupFile()
+                $dirDate = \DateTime::createFromFormat('Ymd_His', $dirName);
+                if ($dirDate && $dirDate < $cutoff) {
+                    $oldBackups[] = $dir;
+                }
+            }
+            $oldCount = count($oldBackups);
+            $totalCount = count($backupDirs);
+            if ($oldCount > 0) {
+                // Find oldest backup age in days
+                $oldestAge = 0;
+                foreach ($oldBackups as $dir) {
+                    $dirName = basename($dir);
+                    $dirDate = \DateTime::createFromFormat('Ymd_His', $dirName);
+                    if ($dirDate) {
+                        $age = (int) $dirDate->diff(now())->days;
+                        if ($age > $oldestAge) {
+                            $oldestAge = $age;
+                        }
+                    }
+                }
+                $results[] = ['Check' => 'Backup Storage', 'Status' => '⚠️ Warning', 'Details' => "{$oldCount} dari {$totalCount} backup kedaluwarsa (retensi {$retentionDays} hari, tertua {$oldestAge} hari)"];
+                $warningCount++;
+            } else {
+                $results[] = ['Check' => 'Backup Storage', 'Status' => '✅ OK', 'Details' => "{$totalCount} backup, semua masih dalam masa retensi ({$retentionDays} hari)"];
+                $passedCount++;
+            }
+        } else {
+            $results[] = ['Check' => 'Backup Storage', 'Status' => '✅ OK', 'Details' => 'Tidak ada backup'];
+            $passedCount++;
+        }
+
         // Print table
         $this->table(['Check', 'Status', 'Details'], $results);
         $this->newLine();
@@ -184,7 +226,7 @@ class ExamDoctorCommand extends Command
 
         if ($failedCount > 0) {
             $this->newLine();
-            $this->components->error('⚠️ Beberpa komponen kritis terindikasi bermasalah. Selesaikan langkah di kolom Details sebelum memulai ujian.');
+            $this->components->error('⚠️ Beberapa komponen kritis terindikasi bermasalah. Selesaikan langkah di kolom Details sebelum memulai ujian.');
         } else {
             $this->newLine();
             $this->components->info('🎉 Semua siap untuk ujian! Let\'s build!');

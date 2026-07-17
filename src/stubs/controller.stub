@@ -40,7 +40,7 @@ class {{ModelName}}Controller extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         ${{modelNameLower}} = $this->{{modelNameLower}}Service->getDetail{{ModelName}}($id);
 
@@ -66,7 +66,7 @@ class {{ModelName}}Controller extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update({{ModelName}}Request $request, $id): JsonResponse
+    public function update({{ModelName}}Request $request, int $id): JsonResponse
     {
         ${{modelNameLower}} = $this->{{modelNameLower}}Service->update{{ModelName}}($id, $request->validated());
 
@@ -79,7 +79,7 @@ class {{ModelName}}Controller extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $this->{{modelNameLower}}Service->delete{{ModelName}}($id);
 

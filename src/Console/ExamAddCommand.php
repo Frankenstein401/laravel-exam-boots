@@ -78,7 +78,8 @@ class ExamAddCommand extends Command
 
         $authMiddleware = '';
         if ($useAuth) {
-            $authMiddleware = $isWeb ? "\$this->middleware('auth');" : "\$this->middleware('auth:sanctum');";
+            $authGuard = config('exam-boots.defaults.auth_method', 'sanctum') === 'jwt' ? 'api' : 'sanctum';
+            $authMiddleware = $isWeb ? "\$this->middleware('auth');" : "\$this->middleware('auth:{$authGuard}');";
         }
 
         // --- Options ---
@@ -233,7 +234,7 @@ class ExamAddCommand extends Command
             if ($file['label'] === 'Migration') {
                 $existingMigrations = glob(database_path("migrations/*_create_{$tableName}_table.php"));
                 if (! empty($existingMigrations)) {
-                    if (! $this->confirm("Migration untuk tabel '{$tableName}' sudah ada, apakah ingin membuat lagi?", false)) {
+                    if (! $this->confirmOverwrite($file['target'])) {
                         $results[] = [
                             'Component' => $file['label'],
                             'File'      => $file['filename'],
@@ -321,7 +322,7 @@ class ExamAddCommand extends Command
             '{$fSnake}' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf,webp', 'max:2048'],
         ]);
 
-        \${$modelNameLower} = \$this->{$modelNameLower}Service->getDetail{$ModelName}(\$id);
+        \${$modelNameLower} = \$this->{$modelNameLower}Service->getDetail{$modelName}(\$id);
 
         \$path = \$request->file('{$fSnake}')->store('{$tableName}', 'public');
 
@@ -643,6 +644,16 @@ enum {$enumName}: string
     }
 }
 PHP;
+
+        // If file already exists, ask for overwrite confirmation
+        if (File::exists($enumPath) && ! $this->confirmOverwrite($enumPath)) {
+            $results[] = [
+                'Component' => "Enum ({$enumName})",
+                'File'      => $enumPath,
+                'Status'    => '⏭️ Skipped',
+            ];
+            return;
+        }
 
         if ($this->writeFile($enumPath, $stub)) {
             $results[] = [

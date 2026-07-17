@@ -87,6 +87,9 @@ exam:auth   Setup authentication system (JWT / Sanctum) with Login, Register, Lo
 
 1. **Full-Boilerplate Ejection (`exam:add`)**: Menghasilkan Model, Migration, Form Request, API Resource, Service, dan Controller.
    - `--belongsTo=Model`: Menyuntikkan relasi `belongsTo` di model anak, `hasMany` di model induk, dan kolom FK di migration.
+   - `--hasMany=Model`: Menyuntikkan relasi `hasMany` di model induk dan `belongsTo` di model anak.
+   - `--hasOne=Model`: Menyuntikkan relasi `hasOne` di model induk dan `belongsTo` di model anak.
+   - `--belongsToMany=Model`: Menyuntikkan relasi `belongsToMany` di kedua model beserta pivot table di migration.
    - `--with-factory`: Otomatis membuat ModelFactory dan DatabaseSeeder.
    - `--upload=field`: Menyuntikkan method upload file, validasi tipe/ukuran file, storage put, dan response image URL.
    - `--web`: Menghasilkan views HTML/Blade, Controller berbasis view redirect, dan mendaftarkan route ke `routes/web.php` (bukan API).
@@ -97,12 +100,12 @@ exam:auth   Setup authentication system (JWT / Sanctum) with Login, Register, Lo
 3. **Backup & Rollback Infrastructure (`exam:undo`)**:
    - Secara otomatis mem-backup versi file asli sebelum dimodifikasi oleh command package.
    - Perintah `php artisan exam:undo` mengembalikan keadaan project ke kondisi semula dengan menghapus file terbuat dan me-restore file yang termodifikasi.
-3. **Global Flags (`--dry-run` & `--force`)**:
+4. **Global Flags (`--dry-run` & `--force`)**:
    - `--dry-run`: Preview seluruh aksi penulisan file dan modifikasi di terminal tanpa menyentuh filesystem asli.
    - `--force`: Menimpa file existing secara otomatis tanpa menampilkan konfirmasi prompt interaktif.
-4. **Configuration File**:
+5. **Configuration File**:
    - Mengatur preferensi default (driver auth default, framework test default, install scramble docs) di file `config/exam-boots.php` untuk mempercepat input prompt interaktif.
-5. **Auto Validation Rules Preset**:
+6. **Auto Validation Rules Preset**:
    - Otomatis mengisi rules pada Form Request hasil eject sesuai relasi (`exists:table,id`), tipe upload (`image|mimes:jpeg,png...`), dan enum (`Rule::enum()`).
 
 ---
