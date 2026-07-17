@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 
 /**
  * Artisan command to generate CRUD boilerplate components.
  *
- * Usage: php artisan exam:add {name}
+ * Usage: php artisan forge:add {name}
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamAddCommand extends Command
+class ForgeAddCommand extends Command
 {
     use TracksFileOperations;
 
@@ -25,7 +25,7 @@ class ExamAddCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:add {name : The name of the component to generate}
+    protected $signature = 'forge:add {name : The name of the component to generate}
                             {--belongsTo=* : Parent model(s), e.g. --belongsTo=Order}
                             {--hasMany=* : Child model(s), e.g. --hasMany=Review}
                             {--hasOne=* : One-to-one child model}
@@ -66,7 +66,7 @@ class ExamAddCommand extends Command
         $useAuth = $this->confirm('Apakah fitur ini membutuhkan Auth Middleware?', true);
 
         // Naming / Config defaults
-        $configCrudType = config('exam-boots.defaults.crud_type', 'eloquent');
+        $configCrudType = config('forge-boots.defaults.crud_type', 'eloquent');
         $defaultChoice = ($configCrudType === 'blank') ? 1 : 0;
 
         /** @var string $dbType */
@@ -78,7 +78,7 @@ class ExamAddCommand extends Command
 
         $authMiddleware = '';
         if ($useAuth) {
-            $authGuard = config('exam-boots.defaults.auth_method', 'sanctum') === 'jwt' ? 'api' : 'sanctum';
+            $authGuard = config('forge-boots.defaults.auth_method', 'sanctum') === 'jwt' ? 'api' : 'sanctum';
             $authMiddleware = $isWeb ? "\$this->middleware('auth');" : "\$this->middleware('auth:{$authGuard}');";
         }
 
@@ -121,7 +121,7 @@ class ExamAddCommand extends Command
         // Soft delete placeholders
         $softDeletesMigrationStr = $softDeletes ? "\$table->softDeletes();" : '';
         $softDeletesImportStr = $softDeletes ? "use Illuminate\Database\Eloquent\SoftDeletes;" : '';
-        $softDeletesTraitStr = $softDeletes ? ", SoftDeletes" : '';
+        $softDeletesTraitStr = $softDeletes ? "use Illuminate\Database\Eloquent\SoftDeletes;" : '';
 
         $filesToGenerate = [
             [
@@ -409,7 +409,7 @@ PHP;
 
         if (File::exists($routePath)) {
             $routeContent = File::get($routePath);
-            $routeLine = $isWeb 
+            $routeLine = $isWeb
                 ? "Route::resource('{$tableName}', \\App\\Http\\Controllers\\{$modelName}Controller::class);"
                 : "Route::apiResource('{$tableName}', \\App\\Http\\Controllers\\Api\\{$modelName}Controller::class);";
 
@@ -440,9 +440,9 @@ PHP;
             }
         }
 
-        // Persist operation log for exam:undo
+        // Persist operation log for forge:undo
         if (! $this->option('dry-run')) {
-            $this->persistOperationLog("exam:add {$rawName}");
+            $this->persistOperationLog("forge:add {$rawName}");
         }
 
         // --- Summary Table ---
@@ -450,7 +450,7 @@ PHP;
         $this->table(['Component', 'File', 'Status'], $results);
 
         $this->newLine();
-        $this->components->info("🚀 CRUD boilerplate for [{$modelName}] generated successfully!");
+        $this->components->info("CRUD boilerplate for [{$modelName}] generated successfully!");
 
         if ($registeredNested) {
             $this->info("   Nested Route: Route::apiResource('{$parentPluralKebab}.{$childPluralKebab}', ...)");

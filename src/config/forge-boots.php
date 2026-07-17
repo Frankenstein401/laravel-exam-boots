@@ -15,7 +15,7 @@ return [
     |
     */
     'defaults' => [
-        'auth_method' => env('EXAM_BOOTS_AUTH', 'jwt'),
+        'auth_method' => env('FORGE_BOOTS_AUTH', 'jwt'),
         'test_framework' => 'pest',
         'install_docs' => true,
         'crud_type' => 'eloquent',

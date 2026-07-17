@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 
 /**
  * Artisan command to generate authorization Policy for a model.
  *
- * Usage: php artisan exam:policy {name}
+ * Usage: php artisan forge:policy {name}
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamPolicyCommand extends Command
+class ForgePolicyCommand extends Command
 {
     use TracksFileOperations;
 
@@ -25,7 +25,7 @@ class ExamPolicyCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:policy {name : The name of the model to generate policy for}
+    protected $signature = 'forge:policy {name : The name of the model to generate policy for}
                             {--dry-run : Preview operations without writing files}
                             {--force : Force overwrite existing files}';
 
@@ -45,7 +45,7 @@ class ExamPolicyCommand extends Command
         $modelName = Str::studly($rawName);
         $modelNameLower = Str::camel($rawName);
 
-        $this->components->info("🛡️ Generating Policy for: {$modelName}");
+        $this->components->info("Generating Policy for: {$modelName}");
 
         $policyPath = app_path("Policies/{$modelName}Policy.php");
         $stubPath = __DIR__ . '/../stubs/policy.stub';
@@ -99,9 +99,9 @@ class ExamPolicyCommand extends Command
             }
         }
 
-        // Persist operation log for exam:undo
+        // Persist operation log for forge:undo
         if (! $this->option('dry-run')) {
-            $this->persistOperationLog("exam:policy {$rawName}");
+            $this->persistOperationLog("forge:policy {$rawName}");
         }
 
         // --- Summary Output ---
@@ -109,12 +109,12 @@ class ExamPolicyCommand extends Command
             [
                 'Component' => 'Policy Class',
                 'File'      => $policyPath,
-                'Status'    => $created ? '✅ Created' : '⏭️ Preview / Skipped',
+                'Status'    => $created ? 'Created' : 'Preview / Skipped',
             ],
             [
                 'Component' => 'AuthServiceProvider Registration',
                 'File'      => $authProviderPath,
-                'Status'    => $registered ? '✅ Registered' : '⏭️ Skipped',
+                'Status'    => $registered ? 'Registered' : 'Skipped',
             ],
         ];
 

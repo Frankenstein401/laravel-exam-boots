@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
-class ExamCommandsTest extends TestCase
+class ForgeCommandsTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -31,21 +31,21 @@ class ExamCommandsTest extends TestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        if (File::exists(storage_path('exam-boots'))) {
-            File::deleteDirectory(storage_path('exam-boots'));
+        if (File::exists(storage_path('forge-boots'))) {
+            File::deleteDirectory(storage_path('forge-boots'));
         }
     }
 
     public function test_it_can_run_doctor_check(): void
     {
-        $this->artisan('exam:doctor')
+        $this->artisan('forge:doctor')
             ->assertSuccessful()
             ->expectsOutputToContain('🏥');
     }
 
     public function test_it_can_display_cheatsheet(): void
     {
-        $this->artisan('exam:cheatsheet')
+        $this->artisan('forge:cheatsheet')
             ->assertSuccessful()
             ->expectsOutputToContain('🥾');
     }
@@ -58,7 +58,7 @@ class ExamCommandsTest extends TestCase
         }
 
         // Run seed admin
-        $this->artisan('exam:seed-admin --email=testadmin@example.com --password=adminpass --force')
+        $this->artisan('forge:seed-admin --email=testadmin@example.com --password=adminpass --force')
             ->assertSuccessful();
 
         $this->assertTrue(File::exists($seederFile));
@@ -72,8 +72,8 @@ class ExamCommandsTest extends TestCase
         $timestamp = $lastEntry['timestamp'];
 
         // Revert using undo
-        $this->artisan('exam:undo')
-            ->expectsQuestion("Apakah Anda yakin ingin me-revert/undo operasi exam:seed-admin ({$timestamp})?", true)
+        $this->artisan('forge:undo')
+            ->expectsQuestion("Apakah Anda yakin ingin me-revert/undo operasi forge:seed-admin ({$timestamp})?", true)
             ->assertSuccessful();
 
         $this->assertFalse(File::exists($seederFile));
@@ -84,7 +84,7 @@ class ExamCommandsTest extends TestCase
         // Delete TestProduct model before dry-run to avoid any overwrite prompt
         File::delete(app_path('Models/TestProduct.php'));
 
-        $this->artisan('exam:add TestProduct --belongsTo=Category --with-factory --enum=status:active,inactive --dry-run --force')
+        $this->artisan('forge:add TestProduct --belongsTo=Category --with-factory --enum=status:active,inactive --dry-run --force')
             ->expectsQuestion('Apakah fitur ini membutuhkan Auth Middleware?', false)
             ->expectsChoice('Pilih tipe database operation:', 'Eloquent CRUD', ['Eloquent CRUD', 'Blank Service'])
             ->expectsQuestion('Terdeteksi relasi belongsTo(Category). Daftarkan sebagai nested route? (/categories/{parent}/test-products)', false)
@@ -114,7 +114,7 @@ class ExamCommandsTest extends TestCase
         File::put($parentModelFile, "<?php\n\nnamespace App\Models;\n\nuse Illuminate\Database\Eloquent\Model;\n\nclass Category extends Model\n{\n}\n");
 
         // Run add command
-        $this->artisan('exam:add TestProduct --belongsTo=Category --with-factory --enum=status:active,inactive --soft-deletes --force')
+        $this->artisan('forge:add TestProduct --belongsTo=Category --with-factory --enum=status:active,inactive --soft-deletes --force')
             ->expectsQuestion('Apakah fitur ini membutuhkan Auth Middleware?', false)
             ->expectsChoice('Pilih tipe database operation:', 'Eloquent CRUD', ['Eloquent CRUD', 'Blank Service'])
             ->expectsQuestion('Terdeteksi relasi belongsTo(Category). Daftarkan sebagai nested route? (/categories/{parent}/test-products)', false)
@@ -165,8 +165,8 @@ class ExamCommandsTest extends TestCase
         $timestamp = $lastEntry['timestamp'];
 
         // 7. Revert using undo
-        $this->artisan('exam:undo')
-            ->expectsQuestion("Apakah Anda yakin ingin me-revert/undo operasi exam:add TestProduct ({$timestamp})?", true)
+        $this->artisan('forge:undo')
+            ->expectsQuestion("Apakah Anda yakin ingin me-revert/undo operasi forge:add TestProduct ({$timestamp})?", true)
             ->assertSuccessful();
 
         // Verify generated files are deleted
@@ -199,7 +199,7 @@ class ExamCommandsTest extends TestCase
         File::put($preExistingFile, "<?php\n\n// Original Content\n");
 
         // Run add command with --force (overwriting it)
-        $this->artisan('exam:add PreExisting --force')
+        $this->artisan('forge:add PreExisting --force')
             ->expectsQuestion('Apakah fitur ini membutuhkan Auth Middleware?', false)
             ->expectsChoice('Pilih tipe database operation:', 'Eloquent CRUD', ['Eloquent CRUD', 'Blank Service'])
             ->assertSuccessful();
@@ -216,8 +216,8 @@ class ExamCommandsTest extends TestCase
         $timestamp = $lastEntry['timestamp'];
 
         // Run undo
-        $this->artisan('exam:undo')
-            ->expectsQuestion("Apakah Anda yakin ingin me-revert/undo operasi exam:add PreExisting ({$timestamp})?", true)
+        $this->artisan('forge:undo')
+            ->expectsQuestion("Apakah Anda yakin ingin me-revert/undo operasi forge:add PreExisting ({$timestamp})?", true)
             ->assertSuccessful();
 
         // Verify the pre-existing file was RESTORED to original content, NOT DELETED!

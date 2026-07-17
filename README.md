@@ -12,8 +12,8 @@
 </p>
 
 <p align="center">
-  <a href="https://packagist.org/packages/gani/laravel-exam-boots"><img src="https://img.shields.io/packagist/v/gani/laravel-exam-boots?label=version&logo=packagist&logoColor=white&color=FF2D20" alt="Packagist"></a>
-  <a href="https://packagist.org/packages/gani/laravel-exam-boots"><img src="https://img.shields.io/packagist/dt/gani/laravel-exam-boots?logo=packagist&logoColor=white&color=FF2D20" alt="Downloads"></a>
+  <a href="https://packagist.org/packages/franken/laravel-exam-boots"><img src="https://img.shields.io/packagist/v/franken/laravel-exam-boots?label=version&logo=packagist&logoColor=white&color=FF2D20" alt="Packagist"></a>
+  <a href="https://packagist.org/packages/franken/laravel-exam-boots"><img src="https://img.shields.io/packagist/dt/franken/laravel-exam-boots?logo=packagist&logoColor=white&color=FF2D20" alt="Downloads"></a>
   <img src="https://img.shields.io/badge/PHP-%5E8.3-777BB4?logo=php&logoColor=white" alt="PHP">
   <img src="https://img.shields.io/badge/Laravel-%5E13.x-FF2D20?logo=laravel&logoColor=white" alt="Laravel">
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
@@ -25,7 +25,7 @@
   <a href="#-referensi-command-cli">Commands</a> •
   <a href="#-arsitektur">Arsitektur</a> •
   <a href="#-contoh-kode">Contoh Kode</a> •
-  <a href="https://gani.github.io/laravel-exam-boots">Dokumentasi HTML</a>
+  <a href="https://franken.github.io/laravel-exam-boots">Dokumentasi HTML</a>
 </p>
 
 ---
@@ -38,13 +38,13 @@
 
 ```bash
 # One-shot setup: environment check + auth + seeder + migrate
-php artisan exam:install
+php artisan forge:install
 
 # Buat CRUD Product dalam <10 detik
-php artisan exam:add Product
+php artisan forge:add Product
 
 # Setup autentikasi JWT/Sanctum
-php artisan exam:auth
+php artisan forge:auth
 ```
 
 ---
@@ -53,18 +53,18 @@ php artisan exam:auth
 
 | Fitur | Command | Deskripsi |
 |----------|---------|-----------|
-| **One-Shot Install** | `exam:install` | Setup lengkap: doctor → auth → seed-admin → migrate |
-| **Full CRUD Eject** | `exam:add {name}` | 6 file sekaligus: Model, Migration, Controller, Service, Request, Resource |
-| **Auth (JWT/Sanctum)** | `exam:auth` | Login, Register, Logout, Profile — siap pakai |
-| **Relasi Eloquent** | `exam:relation` | Inject relasi + migration FK/pivot ke kedua model |
-| **API Response Trait** | `exam:response` | Standarisasi JSON response helper |
-| **Policy Otorisasi** | `exam:policy {Model}` | Policy class + auto-register di AuthServiceProvider |
-| **Feature Tests** | `exam:test {Model}` | CRUD endpoint test (PHPUnit/Pest) |
-| **Export Excel/PDF** | `exam:export {Model}` | Boilerplate export class + PDF view |
-| **Admin Seeder** | `exam:seed-admin` | Akun admin default + auto-register DatabaseSeeder |
-| **Backup & Rollback** | `exam:undo` | Rollback operasi generator + restore backup |
-| **Environment Check** | `exam:doctor` | Cek PHP, DB, config, migration sebelum ujian |
-| **Cheatsheet Offline** | `exam:cheatsheet` | Referensi command cepat di terminal |
+| **One-Shot Install** | `forge:install` | Setup lengkap: doctor → auth → seed-admin → migrate |
+| **Full CRUD Eject** | `forge:add {name}` | 6 file sekaligus: Model, Migration, Controller, Service, Request, Resource |
+| **Auth (JWT/Sanctum)** | `forge:auth` | Login, Register, Logout, Profile — siap pakai |
+| **Relasi Eloquent** | `forge:relation` | Inject relasi + migration FK/pivot ke kedua model |
+| **API Response Trait** | `forge:response` | Standarisasi JSON response helper |
+| **Policy Otorisasi** | `forge:policy {Model}` | Policy class + auto-register di AuthServiceProvider |
+| **Feature Tests** | `forge:test {Model}` | CRUD endpoint test (PHPUnit/Pest) |
+| **Export Excel/PDF** | `forge:export {Model}` | Boilerplate export class + PDF view |
+| **Admin Seeder** | `forge:seed-admin` | Akun admin default + auto-register DatabaseSeeder |
+| **Backup & Rollback** | `forge:undo` | Rollback operasi generator + restore backup |
+| **Environment Check** | `forge:doctor` | Cek PHP, DB, config, migration sebelum ujian |
+| **Cheatsheet Offline** | `forge:cheatsheet` | Referensi command cepat di terminal |
 
 ### Flag Global
 
@@ -82,7 +82,7 @@ Semua command mendukung flag berikut:
 ### 1. Install
 
 ```bash
-composer require gani/laravel-exam-boots
+composer require franken/laravel-exam-boots
 ```
 
 Package menggunakan Laravel Auto-Discovery — tidak perlu register manual.
@@ -90,19 +90,19 @@ Package menggunakan Laravel Auto-Discovery — tidak perlu register manual.
 ### 2. One-Shot Setup (Rekomendasi)
 
 ```bash
-php artisan exam:install
+php artisan forge:install
 ```
 
 Perintah ini menjalankan 4 langkah sekaligus:
-- Verifikasi environment (`exam:doctor`)
-- Setup autentikasi JWT/Sanctum (`exam:auth`)
-- Buat akun admin (`exam:seed-admin`)
+- Verifikasi environment (`forge:doctor`)
+- Setup autentikasi JWT/Sanctum (`forge:auth`)
+- Buat akun admin (`forge:seed-admin`)
 - Jalankan migration
 
 ### 3. Generate CRUD
 
 ```bash
-php artisan exam:add Product
+php artisan forge:add Product
 ```
 
 CLI akan bertanya interaktif:
@@ -120,16 +120,16 @@ Hasil: **6 file siap pakai** — tinggal `php artisan migrate` dan daftarkan rou
 
 ```bash
 # 1. Cek environment
-php artisan exam:doctor
+php artisan forge:doctor
 
 # 2. Setup auth
-php artisan exam:auth
+php artisan forge:auth
 
 # 3. Buat CRUD
-php artisan exam:add Product
+php artisan forge:add Product
 
 # 4. Seeder admin
-php artisan exam:seed-admin
+php artisan forge:seed-admin
 
 # 5. Migrate database
 php artisan migrate
@@ -139,27 +139,27 @@ php artisan migrate
 
 ## Referensi Command CLI
 
-### Command 1: `php artisan exam:install`
+### Command 1: `php artisan forge:install`
 
 **One-shot installer** — menjalankan 4 langkah setup dalam satu perintah.
 
 ```bash
 # Setup lengkap
-php artisan exam:install
+php artisan forge:install
 
 # Preview tanpa eksekusi
-php artisan exam:install --dry-run
+php artisan forge:install --dry-run
 
 # Lewati semua konfirmasi
-php artisan exam:install --force
+php artisan forge:install --force
 ```
 
 Output:
 ```
 Laravel Exam Boots — One-Shot Installer
- 1. Verifikasi environment (exam:doctor)
- 2. Setup autentikasi (exam:auth)
- 3. Buat seeder admin (exam:seed-admin)
+ 1. Verifikasi environment (forge:doctor)
+ 2. Setup autentikasi (forge:auth)
+ 3. Buat seeder admin (forge:seed-admin)
  4. Jalankan migrasi database
 
 ┌──────────────┬──────────────────────────────────────┐
@@ -174,7 +174,7 @@ Laravel Exam Boots — One-Shot Installer
 
 ---
 
-### Command 2: `php artisan exam:add {name}`
+### Command 2: `php artisan forge:add {name}`
 
 Generate **6 file CRUD** sekaligus. Nama komponen otomatis dikonversi ke PascalCase untuk kelas, camelCase untuk variabel, dan snake_case untuk tabel.
 
@@ -196,39 +196,39 @@ Generate **6 file CRUD** sekaligus. Nama komponen otomatis dikonversi ke PascalC
 
 ```bash
 # Basic CRUD
-php artisan exam:add Product
+php artisan forge:add Product
 
 # CRUD dengan relasi kategori, upload gambar, soft deletes
-php artisan exam:add Product \
+php artisan forge:add Product \
   --belongsTo=Category \
   --upload=image \
   --soft-deletes
 
 # CRUD dengan factory, enum status, dan blade views
-php artisan exam:add Order \
+php artisan forge:add Order \
   --with-factory \
   --enum=status:pending,processing,completed \
   --web
 
 # CRUD many-to-many dengan roles
-php artisan exam:add User \
+php artisan forge:add User \
   --belongsToMany=Role \
   --with-factory
 ```
 
 ---
 
-### Command 3: `php artisan exam:auth`
+### Command 3: `php artisan forge:auth`
 
 Setup autentikasi API lengkap dengan pilihan **JWT** atau **Laravel Sanctum**.
 
 ```bash
 # Setup interaktif
-php artisan exam:auth
+php artisan forge:auth
 
 # Paksa metode tertentu
-php artisan exam:auth --method=jwt
-php artisan exam:auth --method=sanctum
+php artisan forge:auth --method=jwt
+php artisan forge:auth --method=sanctum
 ```
 
 Yang akan dihasilkan:
@@ -238,16 +238,16 @@ Yang akan dihasilkan:
 - User model dengan method/trait auth
 - Route auth di `routes/api.php`
 - Scramble API docs (opsional)
-- **Auto Guard Config** — generator `exam:add` otomatis membaca metode auth dari config
+- **Auto Guard Config** — generator `forge:add` otomatis membaca metode auth dari config
 
 ---
 
-### Command 4: `php artisan exam:relation`
+### Command 4: `php artisan forge:relation`
 
 Membangun relasi Eloquent antar model secara interaktif.
 
 ```bash
-php artisan exam:relation
+php artisan forge:relation
 ```
 
 - Inject method relasi ke kedua model
@@ -256,10 +256,10 @@ php artisan exam:relation
 
 ---
 
-### Command 5: `php artisan exam:policy {Model}`
+### Command 5: `php artisan forge:policy {Model}`
 
 ```bash
-php artisan exam:policy Post
+php artisan forge:policy Post
 ```
 
 - Membuat `app/Policies/PostPolicy.php`
@@ -267,24 +267,24 @@ php artisan exam:policy Post
 
 ---
 
-### Command 6: `php artisan exam:test {Model}`
+### Command 6: `php artisan forge:test {Model}`
 
 ```bash
 # PHPUnit
-php artisan exam:test Product
+php artisan forge:test Product
 
 # Pest PHP
-php artisan exam:test Product --pest
+php artisan forge:test Product --pest
 ```
 
 Test yang dihasilkan mencakup: Read, Create, Detail, Update, Delete, Auth Protection.
 
 ---
 
-### Command 7: `php artisan exam:export {Model}`
+### Command 7: `php artisan forge:export {Model}`
 
 ```bash
-php artisan exam:export Product
+php artisan forge:export Product
 ```
 
 - `App/Exports/ProductExport.php` — Excel (maatwebsite/excel)
@@ -293,10 +293,10 @@ php artisan exam:export Product
 
 ---
 
-### Command 8: `php artisan exam:response`
+### Command 8: `php artisan forge:response`
 
 ```bash
-php artisan exam:response
+php artisan forge:response
 ```
 
 Menghasilkan `app/Traits/ApiResponse.php` dengan helper:
@@ -305,7 +305,7 @@ Menghasilkan `app/Traits/ApiResponse.php` dengan helper:
 
 ---
 
-### Command 9: `php artisan exam:doctor`
+### Command 9: `php artisan forge:doctor`
 
 Cek environment sebelum ujian:
 - PHP version (>= 8.3)
@@ -319,46 +319,46 @@ Cek environment sebelum ujian:
 - **Backup retention** — peringatan jika backup terlalu tua
 
 ```bash
-php artisan exam:doctor
+php artisan forge:doctor
 ```
 
 ---
 
-### Command 10: `php artisan exam:seed-admin`
+### Command 10: `php artisan forge:seed-admin`
 
 ```bash
 # Default (admin@example.com / password)
-php artisan exam:seed-admin
+php artisan forge:seed-admin
 
 # Custom
-php artisan exam:seed-admin --email=admin@test.com --password=rahasia123
+php artisan forge:seed-admin --email=admin@test.com --password=rahasia123
 ```
 
 ---
 
-### Command 11: `php artisan exam:cheatsheet`
+### Command 11: `php artisan forge:cheatsheet`
 
 Tampilkan daftar command offline:
 
 ```bash
-php artisan exam:cheatsheet
+php artisan forge:cheatsheet
 ```
 
 ---
 
-### Command 12: `php artisan exam:undo {id?} --prune`
+### Command 12: `php artisan forge:undo {id?} --prune`
 
 Rollback operasi generator terakhir.
 
 ```bash
 # Undo operasi terakhir
-php artisan exam:undo
+php artisan forge:undo
 
 # Undo operasi spesifik (lihat ID dari history)
-php artisan exam:undo abc123
+php artisan forge:undo abc123
 
 # Undo + bersihkan backup expired
-php artisan exam:undo --prune
+php artisan forge:undo --prune
 ```
 
 Fitur:
@@ -516,7 +516,7 @@ laravel-exam-boots/
 │   │   ├── auth-*.stub                  # Auth (JWT & Sanctum variants)
 │   │   ├── api-response-trait.stub      # API Response helper
 │   │   └── scramble-provider.*.stub     # Scramble providers
-│   └── ExamStarterServiceProvider.php   # Service Provider & command registration
+│   └── ForgeStarterServiceProvider.php   # Service Provider & command registration
 ├── docs/
 │   └── index.html                       # Dokumentasi HTML interaktif
 ├── composer.json
@@ -637,9 +637,9 @@ php artisan jwt:secret --force
 Semua command support `--dry-run`:
 
 ```bash
-php artisan exam:add Product --dry-run
-php artisan exam:install --dry-run
-php artisan exam:auth --dry-run
+php artisan forge:add Product --dry-run
+php artisan forge:install --dry-run
+php artisan forge:auth --dry-run
 ```
 
 ### Backup menumpuk?
@@ -647,20 +647,20 @@ php artisan exam:auth --dry-run
 Gunakan `--prune` untuk membersihkan backup yang sudah kedaluwarsa (retensi: 3 hari):
 
 ```bash
-php artisan exam:undo --prune
+php artisan forge:undo --prune
 ```
 
 Cek status backup via:
 
 ```bash
-php artisan exam:doctor
+php artisan forge:doctor
 ```
 
 ---
 
 ## Kontribusi
 
-Kontribusi sangat diterima! Silakan buka issue atau pull request di [GitHub](https://github.com/gani/laravel-exam-boots).
+Kontribusi sangat diterima! Silakan buka issue atau pull request di [GitHub](https://github.com/franken/laravel-exam-boots).
 
 ---
 
@@ -672,7 +672,7 @@ MIT License — lihat file [LICENSE](LICENSE) untuk detail.
 
 ## Author
 
-**Abdul Gani Hadiansyah**
+**Franken**
 
 ---
 

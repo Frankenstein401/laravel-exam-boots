@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 
 /**
  * Artisan command to generate standard API response helper trait.
  *
- * Usage: php artisan exam:response
+ * Usage: php artisan forge:response
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamResponseCommand extends Command
+class ForgeResponseCommand extends Command
 {
     use TracksFileOperations;
 
@@ -24,7 +24,7 @@ class ExamResponseCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:response 
+    protected $signature = 'forge:response
                             {--dry-run : Preview operations without writing files}
                             {--force : Force overwrite existing files}';
 
@@ -40,7 +40,7 @@ class ExamResponseCommand extends Command
      */
     public function handle(): int
     {
-        $this->components->info('📄 Laravel Exam Boots — API Response Trait Setup');
+        $this->components->info('API Response Trait Setup');
         $this->newLine();
 
         $targetPath = app_path('Traits/ApiResponse.php');
@@ -59,15 +59,15 @@ class ExamResponseCommand extends Command
         }
 
         $content = File::get($stubPath);
-        
+
         $created = false;
         if ($this->writeFile($targetPath, $content)) {
             $created = true;
         }
 
-        // Persist operation log for exam:undo
+        // Persist operation log for forge:undo
         if (! $this->option('dry-run')) {
-            $this->persistOperationLog('exam:response');
+            $this->persistOperationLog('forge:response');
         }
 
         // --- Summary Output ---
@@ -75,7 +75,7 @@ class ExamResponseCommand extends Command
             [
                 'Component' => 'ApiResponse Trait',
                 'File'      => $targetPath,
-                'Status'    => $created ? '✅ Created' : '⏭️ Preview / Skipped',
+                'Status'    => $created ? 'Created' : 'Preview / Skipped',
             ]
         ];
 
@@ -83,7 +83,7 @@ class ExamResponseCommand extends Command
         $this->table(['Component', 'File', 'Status'], $results);
 
         $this->newLine();
-        $this->components->info('🚀 API Response Trait setup complete!');
+        $this->components->info('API Response Trait setup complete!');
         $this->newLine();
         $this->components->warn('Cara Penggunaan:');
         $this->info('   1. Tambahkan ke Controller: use \\App\\Traits\\ApiResponse;');

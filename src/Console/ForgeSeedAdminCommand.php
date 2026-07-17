@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 
 /**
  * Artisan command to generate AdminUserSeeder.
  *
- * Usage: php artisan exam:seed-admin
+ * Usage: php artisan forge:seed-admin
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamSeedAdminCommand extends Command
+class ForgeSeedAdminCommand extends Command
 {
     use TracksFileOperations;
 
@@ -24,8 +24,8 @@ class ExamSeedAdminCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:seed-admin 
-                            {--email=admin@example.com : Email address for the admin user} 
+    protected $signature = 'forge:seed-admin
+                            {--email=admin@example.com : Email address for the admin user}
                             {--password=password : Plaintext password for the admin user}
                             {--dry-run : Preview operations without writing files}
                             {--force : Force overwrite existing files}';
@@ -42,7 +42,7 @@ class ExamSeedAdminCommand extends Command
      */
     public function handle(): int
     {
-        $this->components->info('👤 Laravel Exam Boots — Admin User Seeder Generator');
+        $this->components->info('Admin User Seeder Generator');
         $this->newLine();
 
         $email = $this->option('email');
@@ -118,9 +118,9 @@ PHP;
             }
         }
 
-        // Persist operation log for exam:undo
+        // Persist operation log for forge:undo
         if (! $this->option('dry-run')) {
-            $this->persistOperationLog('exam:seed-admin');
+            $this->persistOperationLog('forge:seed-admin');
         }
 
         // --- Summary Output ---
@@ -128,12 +128,12 @@ PHP;
             [
                 'Component' => 'AdminUserSeeder Class',
                 'File'      => $seederPath,
-                'Status'    => $created ? '✅ Created' : '⏭️ Preview / Skipped',
+                'Status'    => $created ? 'Created' : 'Preview / Skipped',
             ],
             [
                 'Component' => 'DatabaseSeeder Registration',
                 'File'      => $dbSeederPath,
-                'Status'    => $registered ? '✅ Registered' : '⏭️ Skipped',
+                'Status'    => $registered ? 'Registered' : 'Skipped',
             ],
         ];
 

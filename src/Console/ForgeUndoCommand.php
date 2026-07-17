@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -10,18 +10,18 @@ use Illuminate\Support\Facades\File;
 /**
  * Artisan command to undo generator file creations and modifications.
  *
- * Usage: php artisan exam:undo {id?}
+ * Usage: php artisan forge:undo {id?}
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamUndoCommand extends Command
+class ForgeUndoCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'exam:undo {id? : ID operasi spesifik, default: yang terakhir}
+    protected $signature = 'forge:undo {id? : ID operasi spesifik, default: yang terakhir}
                             {--prune : Bersihkan backup kedaluwarsa sebelum undo}';
 
     /**
@@ -36,7 +36,7 @@ class ExamUndoCommand extends Command
      */
     public function handle(): int
     {
-        $logFile = storage_path('exam-boots/history.json');
+        $logFile = storage_path('forge-boots/history.json');
 
         if (! File::exists($logFile)) {
             $this->components->warn('Tidak ada riwayat operasi yang tercatat.');
@@ -78,10 +78,10 @@ class ExamUndoCommand extends Command
         // --prune: Cleanup old backups before undo
         $pruneCount = 0;
         if ($this->option('prune')) {
-            $backupDir = storage_path('exam-boots/backups');
+            $backupDir = storage_path('forge-boots/backups');
             if (File::exists($backupDir)) {
                 $backupDirs = File::directories($backupDir);
-                $retentionDays = (int) config('exam-boots.backup.retention_days', 3);
+                $retentionDays = (int) config('forge-boots.backup.retention_days', 3);
                 $cutoff = now()->subDays($retentionDays);
                 $deleted = [];
                 foreach ($backupDirs as $dir) {
@@ -94,12 +94,12 @@ class ExamUndoCommand extends Command
                 }
                 $pruneCount = count($deleted);
                 if ($pruneCount > 0) {
-                    $this->components->info("🧹 Dibersihkan {$pruneCount} backup kedaluwarsa (retensi {$retentionDays} hari).");
+                    $this->components->info("Dibersihkan {$pruneCount} backup kedaluwarsa (retensi {$retentionDays} hari).");
                 } else {
-                    $this->components->info("✅ Semua backup masih dalam masa retensi ({$retentionDays} hari). Tidak ada yang dibersihkan.");
+                    $this->components->info("Semua backup masih dalam masa retensi ({$retentionDays} hari). Tidak ada yang dibersihkan.");
                 }
             } else {
-                $this->components->info('📂 Tidak ada direktori backup untuk dibersihkan.');
+                $this->components->info('Tidak ada direktori backup untuk dibersihkan.');
             }
             $this->newLine();
         }
@@ -140,11 +140,11 @@ class ExamUndoCommand extends Command
         File::put($logFile, json_encode(array_values($history), JSON_PRETTY_PRINT));
 
         $this->newLine();
-        $this->components->info('🎉 Revert/Undo operasi berhasil diselesaikan.');
+        $this->components->info('Revert/Undo operasi berhasil diselesaikan.');
 
         if (! $this->option('prune')) {
             $this->newLine();
-            $this->components->warn('💡 Tips: Jalankan dengan --prune untuk membersihkan backup kedaluwarsa.');
+            $this->components->warn('Tips: Jalankan dengan --prune untuk membersihkan backup kedaluwarsa.');
         }
 
         return self::SUCCESS;

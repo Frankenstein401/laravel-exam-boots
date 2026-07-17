@@ -4,5 +4,5 @@ use App\Providers\AppServiceProvider;
 
 return [
     AppServiceProvider::class,
-    NamaKamu\LaravelExamBoots\ExamStarterServiceProvider::class,
+    NamaKamu\LaravelForgeBoots\ForgeStarterServiceProvider::class,
 ];

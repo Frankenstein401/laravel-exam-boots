@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Concerns;
+namespace NamaKamu\LaravelForgeBoots\Concerns;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -46,7 +46,7 @@ trait TracksFileOperations
             return null;
         }
 
-        $backupDir = storage_path('exam-boots/backups/' . now()->format('Ymd_His'));
+        $backupDir = storage_path('forge-boots/backups/' . now()->format('Ymd_His'));
         File::ensureDirectoryExists($backupDir);
 
         // Normalize path separators to avoid windows/unix path issues in filename
@@ -66,7 +66,7 @@ trait TracksFileOperations
             return;
         }
 
-        $logFile = storage_path('exam-boots/history.json');
+        $logFile = storage_path('forge-boots/history.json');
         File::ensureDirectoryExists(dirname($logFile));
 
         $history = File::exists($logFile) ? json_decode(File::get($logFile), true) : [];

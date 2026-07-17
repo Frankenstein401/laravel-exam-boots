@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "gani/laravel-exam-boots",
+    "name": "franken/laravel-exam-boots",
     "version": "1.2.6",
     "type": "library",
     "description": "Laravel CLI generator for certification exams — one-shot CRUD, Auth (JWT/Sanctum), Relations, Enums, Tests, Export, Rollback, and Dry-run mode",
@@ -25,7 +25,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "NamaKamu\\LaravelExamBoots\\": "src/"
+            "NamaKamu\\LaravelForgeBoots\\": "src/"
         }
     },
     "autoload-dev": {
@@ -73,7 +73,7 @@
         "laravel": {
             "dont-discover": [],
             "providers": [
-                "NamaKamu\\LaravelExamBoots\\ExamStarterServiceProvider"
+                "NamaKamu\\LaravelForgeBoots\\ForgeStarterServiceProvider"
             ]
         }
     },

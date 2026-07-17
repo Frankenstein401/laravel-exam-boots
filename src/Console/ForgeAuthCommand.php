@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 use Symfony\Component\Process\Process;
 
 /**
@@ -16,11 +16,11 @@ use Symfony\Component\Process\Process;
  * Auto-installs API scaffolding, configures auth guards, modifies User model,
  * generates AuthController, and appends auth routes.
  *
- * Usage: php artisan exam:auth
+ * Usage: php artisan forge:auth
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamAuthCommand extends Command
+class ForgeAuthCommand extends Command
 {
     use TracksFileOperations;
 
@@ -29,9 +29,9 @@ class ExamAuthCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:auth 
-                            {--method= : Authentication method (jwt or sanctum)} 
-                            {--dry-run : Preview operations without writing files} 
+    protected $signature = 'forge:auth
+                            {--method= : Authentication method (jwt or sanctum)}
+                            {--dry-run : Preview operations without writing files}
                             {--force : Force overwrite existing files}';
 
     /**
@@ -53,7 +53,7 @@ class ExamAuthCommand extends Command
      */
     public function handle(): int
     {
-        $this->components->info('🔐 Laravel Exam Boots — Authentication Setup');
+        $this->components->info('Authentication Setup');
         $this->newLine();
 
         $stubDir = __DIR__ . '/../stubs/';
@@ -88,7 +88,7 @@ class ExamAuthCommand extends Command
         // =============================================
         $methodOpt = $this->option('method');
         if (! $methodOpt) {
-            $configDefault = config('exam-boots.defaults.auth_method');
+            $configDefault = config('forge-boots.defaults.auth_method');
             if ($configDefault === 'jwt') {
                 $methodOpt = 'JWT (tymon/jwt-auth)';
             } elseif ($configDefault === 'sanctum') {
@@ -196,7 +196,7 @@ class ExamAuthCommand extends Command
         // Step 7: API Documentation (Scramble)
         // =============================================
         $this->newLine();
-        $configInstallDocs = config('exam-boots.defaults.install_docs', true);
+        $configInstallDocs = config('forge-boots.defaults.install_docs', true);
         $installDocs = $this->confirm('Apakah ingin menginstall API Documentation (Scramble)?', $configInstallDocs);
 
         if ($installDocs) {
@@ -205,9 +205,9 @@ class ExamAuthCommand extends Command
             $this->addResult('API Docs (Scramble)', '⏭️ Skipped');
         }
 
-        // Persist operation log for exam:undo
+        // Persist operation log for forge:undo
         if (! $this->option('dry-run')) {
-            $this->persistOperationLog('exam:auth');
+            $this->persistOperationLog('forge:auth');
         }
 
         // =============================================
@@ -220,7 +220,7 @@ class ExamAuthCommand extends Command
         );
 
         $this->newLine();
-        $this->components->info("🚀 Authentication [{$authMethod}] setup complete!");
+        $this->components->info("Authentication [{$authMethod}] setup complete!");
 
         $this->newLine();
         $this->components->warn('Langkah selanjutnya:');
@@ -232,7 +232,7 @@ class ExamAuthCommand extends Command
 
         if ($installDocs) {
             $this->newLine();
-            $this->info('   📖 API Documentation: http://localhost:8000/docs/api');
+            $this->info('   API Documentation: http://localhost:8000/docs/api');
         }
 
         return self::SUCCESS;

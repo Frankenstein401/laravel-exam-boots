@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 
 /**
  * Artisan command to generate feature test skeleton.
  *
- * Usage: php artisan exam:test {name} {--pest}
+ * Usage: php artisan forge:test {name} {--pest}
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamTestCommand extends Command
+class ForgeTestCommand extends Command
 {
     use TracksFileOperations;
 
@@ -25,7 +25,7 @@ class ExamTestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:test {name : The name of the model to generate tests for} 
+    protected $signature = 'forge:test {name : The name of the model to generate tests for}
                             {--pest : Use Pest PHP syntax}
                             {--dry-run : Preview operations without writing files}
                             {--force : Force overwrite existing files}';
@@ -50,7 +50,7 @@ class ExamTestCommand extends Command
         $usePest = $this->option('pest');
 
         if (! $usePest) {
-            $configFramework = config('exam-boots.defaults.test_framework', 'phpunit');
+            $configFramework = config('forge-boots.defaults.test_framework', 'phpunit');
             if (strtolower($configFramework) === 'pest') {
                 $usePest = true;
             } else {
@@ -64,7 +64,7 @@ class ExamTestCommand extends Command
         }
 
         $framework = $usePest ? 'Pest PHP' : 'PHPUnit';
-        $this->components->info("🧪 Generating {$framework} Feature Test for: {$modelName}");
+        $this->components->info("Generating {$framework} Feature Test for: {$modelName}");
 
         $stubFile = $usePest ? 'test-pest.stub' : 'test-phpunit.stub';
         $stubPath = __DIR__ . "/../stubs/{$stubFile}";
@@ -94,9 +94,9 @@ class ExamTestCommand extends Command
             $created = true;
         }
 
-        // Persist operation log for exam:undo
+        // Persist operation log for forge:undo
         if (! $this->option('dry-run')) {
-            $this->persistOperationLog("exam:test {$rawName}");
+            $this->persistOperationLog("forge:test {$rawName}");
         }
 
         // --- Summary Output ---
@@ -104,7 +104,7 @@ class ExamTestCommand extends Command
             [
                 'Component' => "Feature Test ({$framework})",
                 'File'      => $testPath,
-                'Status'    => $created ? '✅ Created' : '⏭️ Preview / Skipped',
+                'Status'    => $created ? 'Created' : 'Preview / Skipped',
             ]
         ];
 

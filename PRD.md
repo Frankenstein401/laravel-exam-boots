@@ -2,7 +2,7 @@ Product Requirement Document (PRD)
 Project Name: laravel-exam-boots (Shadcn-style Backend CLI for Certification)
 Version: 1.0.0 (Targeting PHP 8.5+ & Laravel latest)
 
-Author: Abdul Gani Hadiansyah
+Author: franken
 
 1. Objective & Overview
 Tujuan dari project ini adalah membuat sebuah CLI Component Generator berbasis Laravel Package (di-install via Composer) yang mengadopsi filosofi shadcn/ui. Tool ini tidak bertindak sebagai library blackbox, melainkan menyuntikkan (eject) kode boilerplate arsitektur modern (Controller, Service, Request, Resource) langsung ke dalam direktori aplikasi utama (app/) agar peserta ujian dapat menghemat waktu hingga 80% dalam setup struktur CRUD dan Authentication.
@@ -19,10 +19,10 @@ Architecture Pattern: Controller-Service-Resource (Component-Based Separation)
 3. Core Features & User Flow (CLI Interactivity)
 CLI harus bersifat interaktif menggunakan bawaan Artisan Command Prompts.
 
-Flow Perintah: php artisan exam:add {ComponentName}
+Flow Perintah: php artisan forge:add {ComponentName}
 Cuplikan kode
 graph TD
-    A[Jalankan php artisan exam:add Product] --> B{Fitur butuh Auth Middleware?}
+    A[Jalankan php artisan forge:add Product] --> B{Fitur butuh Auth Middleware?}
     B -- Yes --> C[Set Auth Middleware di Controller Stub]
     B -- No --> D[Biarkan Public]
     C --> E{Pilih Tipe Database Operation}
@@ -60,7 +60,7 @@ laravel-exam-fast/
 │   │   ├── service.stub                 # Template Service
 │   │   ├── request.stub                 # Template Request
 │   │   └── resource.stub                # Template Resource
-│   └── ExamStarterServiceProvider.php   # Registrasi Package & Command
+│   └── ForgeStarterServiceProvider.php   # Registrasi Package & Command
 └── composer.json                        # Konfigurasi Auto-discovery
 6. Stub Template Specifications (For AI Code Generation)
 Dokumen ini memberikan spesifikasi kode stubs yang harus dibuat oleh AI:
@@ -129,7 +129,7 @@ TAMBAHAN
 
 Yang perlu dicek konsistensinya dulu
 
-exam:add vs exam:relation overlap: di Fitur Utama poin 1, --belongsTo=Model katanya udah bisa inject relasi via exam:add. Tapi terus ada juga exam:relation (Command 4) yang isinya relationship generator. Ini dua command beda tapi kerjaannya mirip — apa exam:relation khusus buat nambah relasi ke model yang sudah ada (tanpa generate ulang CRUD), sedangkan --belongsTo di exam:add buat pas bikin model baru? Kalau iya, worth ditulis jelas di README biar gak bingung sendiri pas ujian mode panik. Kalau enggak ada bedanya, mending salah satu di-deprecate biar gak ada dua source of truth.
+forge:add vs exam:relation overlap: di Fitur Utama poin 1, --belongsTo=Model katanya udah bisa inject relasi via forge:add. Tapi terus ada juga exam:relation (Command 4) yang isinya relationship generator. Ini dua command beda tapi kerjaannya mirip — apa exam:relation khusus buat nambah relasi ke model yang sudah ada (tanpa generate ulang CRUD), sedangkan --belongsTo di forge:add buat pas bikin model baru? Kalau iya, worth ditulis jelas di README biar gak bingung sendiri pas ujian mode panik. Kalau enggak ada bedanya, mending salah satu di-deprecate biar gak ada dua source of truth.
 
 Fitur yang masih kosong slot-nya
 1. Validation Rules Preset
@@ -237,7 +237,7 @@ public function handle()
 
     $this->info('Undo berhasil.');
 }
-Penting: history disimpan per-run (bukan per-file), jadi exam:undo tanpa argumen selalu revert operasi terakhir secara utuh — kalau exam:add Product --with-factory bikin 8 file, undo sekali hapus semua 8 + restore file yang di-modify.
+Penting: history disimpan per-run (bukan per-file), jadi exam:undo tanpa argumen selalu revert operasi terakhir secara utuh — kalau forge:add Product --with-factory bikin 8 file, undo sekali hapus semua 8 + restore file yang di-modify.
 
 2. Dry-run Mode (--dry-run)
 Paling gampang diimplementasi kalau file-writing kamu udah lewat satu method sentral. Tambah flag global, lalu di titik penulisan file:
@@ -265,7 +265,7 @@ protected function modifyFile(string $path, string $newContent, string $descript
     File::put($path, $newContent);
     $this->info("Modified: {$path}");
 }
-Semua command (exam:add, exam:auth, exam:relation, dst) tinggal panggil writeFile()/modifyFile() daripada File::put() langsung. Tambahin di tiap signature: {--dry-run : Preview tanpa menulis file}.
+Semua command (forge:add, forge:auth, exam:relation, dst) tinggal panggil writeFile()/modifyFile() daripada File::put() langsung. Tambahin di tiap signature: {--dry-run : Preview tanpa menulis file}.
 Bonus: di akhir dry-run, kasih summary table biar keliatan jelas apa aja yang bakal kena.
 
 3. --force Flag Global
@@ -309,10 +309,10 @@ Di tiap command, sebelum masuk ke interactive prompt, cek config dulu:
 php$authMethod = $this->option('method')
     ?? config('exam-boots.defaults.auth_method')
     ?? $this->choice('Pilih metode autentikasi', ['jwt', 'sanctum']);
-Prioritas: flag CLI eksplisit > config file > interactive prompt. Ini yang paling ngehemat waktu kalau kamu udah tau preferensi kamu dari awal ujian — tinggal isi config sekali di awal, sisanya exam:auth jalan tanpa nanya-nanya lagi.
+Prioritas: flag CLI eksplisit > config file > interactive prompt. Ini yang paling ngehemat waktu kalau kamu udah tau preferensi kamu dari awal ujian — tinggal isi config sekali di awal, sisanya forge:auth jalan tanpa nanya-nanya lagi.
 
 5. Validation Rules Preset (auto di Request stub)
-Ini nyambung ke --belongsTo dan --upload yang udah ada. Bikin builder yang jalan pas exam:add:
+Ini nyambung ke --belongsTo dan --upload yang udah ada. Bikin builder yang jalan pas forge:add:
 phpprotected function buildValidationRules(array $options): string
 {
     $rules = [];
@@ -341,7 +341,7 @@ phpprotected function buildValidationRules(array $options): string
 Hasil inject ke request.stub di placeholder {{ rules }}. Field lain (non-relasi/upload/enum) tetep kosong dengan komentar // TODO: tambahkan validasi field lain.
 
 6. Enum/Status Field Generator (--enum)
-Signature tambahan di exam:add:
+Signature tambahan di forge:add:
 php{--enum=* : Format field:value1,value2,value3 — e.g. --enum=status:pending,approved,rejected}
 a. Generate Enum Class
 phpprotected function generateEnumClass(string $field, array $values): void
@@ -400,5 +400,5 @@ php$enums = collect($this->option('enum'))
 
 Ringkasan Prioritas Implementasi
 UrutanFiturKenapa urutan ini1TracksFileOperations trait + backupFondasi — command lain depend ke sini2writeFile()/modifyFile() central methodDipakai --dry-run, --force, backup sekaligus3exam:undoBaru bisa jalan setelah #1-2 ada4--dry-run, --forceTinggal nempel di method sentral5Config fileIndependent, bisa paralel kapan aja6Validation preset + Enum generatorFeature-level, gak depend ke apapun di atas
-Titik kritis: refactor exam:add yang udah jalan sekarang ke writeFile()/modifyFile() dulu sebelum nambah fitur baru di atasnya — kalau langsung nambah fitur di atas kode lama yang masih File::put() manual, nanti kamu harus refactor ulang pas udah banyak command lain ikut bergantung ke pattern lama. Worth diinvest waktu sekarang.
+Titik kritis: refactor forge:add yang udah jalan sekarang ke writeFile()/modifyFile() dulu sebelum nambah fitur baru di atasnya — kalau langsung nambah fitur di atas kode lama yang masih File::put() manual, nanti kamu harus refactor ulang pas udah banyak command lain ikut bergantung ke pattern lama. Worth diinvest waktu sekarang.
 Mau saya bantu tulis full ExamAddCommand.php versi refactored yang udah pakai semua pattern ini?

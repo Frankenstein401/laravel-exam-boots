@@ -14,7 +14,7 @@ Jika kamu memiliki Vercel CLI terpasang di komputer kamu:
    vercel docs/
    ```
 3. Ikuti petunjuk di terminal (pilih yes, hubungkan ke akun kamu, dll.).
-4. Setelah selesai, kamu akan mendapatkan URL publik (misal: `https://laravel-exam-boots-docs.vercel.app`).
+4. Setelah selesai, kamu akan mendapatkan URL publik (misal: `https://laravel-forge-boots-docs.vercel.app`).
 
 ---
 
@@ -24,7 +24,7 @@ Jika repository kamu sudah di-push ke GitHub/GitLab:
 
 1. Masuk ke [Vercel Dashboard](https://vercel.com/dashboard).
 2. Klik tombol **Add New** -> **Project**.
-3. Hubungkan ke repository Git kamu dan pilih repository `laravel-exam-boots`.
+3. Hubungkan ke repository Git kamu dan pilih repository `laravel-forge-boots`.
 4. Pada bagian **Configure Project**:
    - Cari opsi **Root Directory** dan klik **Edit**.
    - Arahkan Root Directory ke folder `docs`.

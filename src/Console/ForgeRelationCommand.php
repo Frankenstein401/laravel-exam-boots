@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 
 /**
  * Artisan command to generate Eloquent relationships between two models.
@@ -17,11 +17,11 @@ use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
  *
  * Inspired by NestJS module-based relationship patterns.
  *
- * Usage: php artisan exam:relation
+ * Usage: php artisan forge:relation
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamRelationCommand extends Command
+class ForgeRelationCommand extends Command
 {
     use TracksFileOperations;
 
@@ -30,8 +30,8 @@ class ExamRelationCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:relation 
-                            {--dry-run : Preview operations without writing files} 
+    protected $signature = 'forge:relation
+                            {--dry-run : Preview operations without writing files}
                             {--force : Force overwrite existing files}';
 
     /**
@@ -46,7 +46,7 @@ class ExamRelationCommand extends Command
      */
     public function handle(): int
     {
-        $this->components->info('🔗 Laravel Exam Boots — Relationship Generator');
+        $this->components->info('Relationship Generator');
         $this->newLine();
 
         // =============================================
@@ -109,13 +109,13 @@ class ExamRelationCommand extends Command
 
         if (! File::exists($parentModelPath)) {
             $this->components->error("Model {$parent} tidak ditemukan di app/Models/{$parent}.php");
-            $this->info('   Jalankan dulu: php artisan exam:add ' . $parent);
+            $this->info('   Jalankan dulu: php artisan forge:add ' . $parent);
             return self::FAILURE;
         }
 
         if (! File::exists($childModelPath)) {
             $this->components->error("Model {$child} tidak ditemukan di app/Models/{$child}.php");
-            $this->info('   Jalankan dulu: php artisan exam:add ' . $child);
+            $this->info('   Jalankan dulu: php artisan forge:add ' . $child);
             return self::FAILURE;
         }
 
@@ -139,16 +139,16 @@ class ExamRelationCommand extends Command
 
         // Inject into parent model
         if ($this->injectMethodIntoModel($parentModelPath, $parentMethod, $parent)) {
-            $results[] = ['Step' => "Inject relasi ke {$parent} model", 'Status' => '✅ Added'];
+            $results[] = ['Step' => "Inject relasi ke {$parent} model", 'Status' => 'Added'];
         } else {
-            $results[] = ['Step' => "Inject relasi ke {$parent} model", 'Status' => '⚠️ Method mungkin sudah ada'];
+            $results[] = ['Step' => "Inject relasi ke {$parent} model", 'Status' => 'Method mungkin sudah ada'];
         }
 
         // Inject into child model
         if ($this->injectMethodIntoModel($childModelPath, $childMethod, $child)) {
-            $results[] = ['Step' => "Inject relasi ke {$child} model", 'Status' => '✅ Added'];
+            $results[] = ['Step' => "Inject relasi ke {$child} model", 'Status' => 'Added'];
         } else {
-            $results[] = ['Step' => "Inject relasi ke {$child} model", 'Status' => '⚠️ Method mungkin sudah ada'];
+            $results[] = ['Step' => "Inject relasi ke {$child} model", 'Status' => 'Method mungkin sudah ada'];
         }
 
         // =============================================
@@ -185,14 +185,14 @@ class ExamRelationCommand extends Command
         }
 
         if ($this->writeFile($migrationPath, $stubContent)) {
-            $results[] = ['Step' => 'Migration', 'Status' => '✅ Created'];
+            $results[] = ['Step' => 'Migration', 'Status' => 'Created'];
         } else {
-            $results[] = ['Step' => 'Migration', 'Status' => '⏭️ Preview / Skipped'];
+            $results[] = ['Step' => 'Migration', 'Status' => 'Preview / Skipped'];
         }
 
-        // Persist operation log for exam:undo
+        // Persist operation log for forge:undo
         if (! $this->option('dry-run')) {
-            $this->persistOperationLog("exam:relation {$parent} {$child}");
+            $this->persistOperationLog("forge:relation {$parent} {$child}");
         }
 
         // =============================================
@@ -203,7 +203,7 @@ class ExamRelationCommand extends Command
 
         $this->newLine();
         $relationLabel = $isOneToOne ? 'One to One' : ($isManyToMany ? 'Many to Many' : 'One to Many');
-        $this->components->info("🔗 Relasi [{$parent}] ←→ [{$child}] ({$relationLabel}) berhasil dibuat!");
+        $this->components->info("Relasi [{$parent}] - [{$child}] ({$relationLabel}) berhasil dibuat!");
 
         $this->newLine();
         $this->components->warn('Langkah selanjutnya:');

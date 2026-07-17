@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 
 /**
  * Artisan command to generate data export boilerplate.
  *
- * Usage: php artisan exam:export {name}
+ * Usage: php artisan forge:export {name}
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamExportCommand extends Command
+class ForgeExportCommand extends Command
 {
     use TracksFileOperations;
 
@@ -25,7 +25,7 @@ class ExamExportCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:export {name : The name of the model to generate exports for}
+    protected $signature = 'forge:export {name : The name of the model to generate exports for}
                             {--dry-run : Preview operations without writing files}
                             {--force : Force overwrite existing files}';
 
@@ -46,7 +46,7 @@ class ExamExportCommand extends Command
         $modelNameLower = Str::camel($rawName);
         $tableName = Str::snake(Str::pluralStudly($modelName));
 
-        $this->components->info("📊 Generating Export Boilerplate for: {$modelName}");
+        $this->components->info("Generating Export Boilerplate for: {$modelName}");
 
         $format = $this->choice(
             'Pilih format export:',
@@ -77,10 +77,10 @@ class ExamExportCommand extends Command
                     $content
                 );
                 if ($this->writeFile($excelPath, $content)) {
-                    $results[] = ['Component' => 'Excel Export Class', 'File' => $excelPath, 'Status' => '✅ Created'];
+                    $results[] = ['Component' => 'Excel Export Class', 'File' => $excelPath, 'Status' => 'Created'];
                 }
             } else {
-                $results[] = ['Component' => 'Excel Export Class', 'File' => $excelPath, 'Status' => '⏭_ Skipped'];
+                $results[] = ['Component' => 'Excel Export Class', 'File' => $excelPath, 'Status' => 'Skipped'];
             }
         }
 
@@ -101,10 +101,10 @@ class ExamExportCommand extends Command
                     $content
                 );
                 if ($this->writeFile($pdfPath, $content)) {
-                    $results[] = ['Component' => 'PDF Export Service', 'File' => $pdfPath, 'Status' => '✅ Created'];
+                    $results[] = ['Component' => 'PDF Export Service', 'File' => $pdfPath, 'Status' => 'Created'];
                 }
             } else {
-                $results[] = ['Component' => 'PDF Export Service', 'File' => $pdfPath, 'Status' => '⏭_ Skipped'];
+                $results[] = ['Component' => 'PDF Export Service', 'File' => $pdfPath, 'Status' => 'Skipped'];
             }
 
             // Generate Blade view for PDF
@@ -124,16 +124,16 @@ class ExamExportCommand extends Command
                     $content
                 );
                 if ($this->writeFile($viewPath, $content)) {
-                    $results[] = ['Component' => 'PDF Blade View', 'File' => $viewPath, 'Status' => '✅ Created'];
+                    $results[] = ['Component' => 'PDF Blade View', 'File' => $viewPath, 'Status' => 'Created'];
                 }
             } else {
-                $results[] = ['Component' => 'PDF Blade View', 'File' => $viewPath, 'Status' => '⏭_ Skipped'];
+                $results[] = ['Component' => 'PDF Blade View', 'File' => $viewPath, 'Status' => 'Skipped'];
             }
         }
 
-        // Persist operation log for exam:undo
+        // Persist operation log for forge:undo
         if (! $this->option('dry-run')) {
-            $this->persistOperationLog("exam:export {$rawName}");
+            $this->persistOperationLog("forge:export {$rawName}");
         }
 
         $this->newLine();
@@ -141,7 +141,7 @@ class ExamExportCommand extends Command
 
         $this->newLine();
         $this->components->warn('Langkah selanjutnya:');
-        
+
         if ($wantsExcel) {
             $this->info("   1. Pastikan package terinstall: composer require maatwebsite/excel");
             $this->info("   2. Gunakan di Controller / Route:");

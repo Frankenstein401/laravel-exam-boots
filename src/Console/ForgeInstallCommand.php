@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace NamaKamu\LaravelExamBoots\Console;
+namespace NamaKamu\LaravelForgeBoots\Console;
 
 use Illuminate\Console\Command;
-use NamaKamu\LaravelExamBoots\Concerns\TracksFileOperations;
+use NamaKamu\LaravelForgeBoots\Concerns\TracksFileOperations;
 
 /**
- * Artisan command to run full exam setup in one shot.
+ * Artisan command to run full forge setup in one shot.
  *
- * Orchestrates exam:doctor, exam:auth, exam:seed-admin, and migrate
+ * Orchestrates forge:doctor, forge:auth, forge:seed-admin, and migrate
  * in a single command with a summary at the end.
  *
- * Usage: php artisan exam:install
+ * Usage: php artisan forge:install
  *
- * @package NamaKamu\LaravelExamBoots
+ * @package NamaKamu\LaravelForgeBoots
  */
-class ExamInstallCommand extends Command
+class ForgeInstallCommand extends Command
 {
     use TracksFileOperations;
 
@@ -26,7 +26,7 @@ class ExamInstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'exam:install
+    protected $signature = 'forge:install
                             {--dry-run : Preview operations}
                             {--force : Force overwrite}';
 
@@ -49,17 +49,17 @@ class ExamInstallCommand extends Command
      */
     public function handle(): int
     {
-        $this->components->info('🚀 Laravel Exam Boots — One-Shot Installer');
+        $this->components->info('One-Shot Installer');
         $this->newLine();
 
         $isDryRun = $this->option('dry-run');
         $force = $this->option('force');
 
         $this->line('Perintah ini akan menjalankan beberapa langkah sekaligus:');
-        $this->line('  ' . ($isDryRun ? '⏭️' : '1') . '. Verifikasi environment (exam:doctor)');
-        $this->line('  ' . ($isDryRun ? '⏭️' : '2') . '. Setup autentikasi (exam:auth)');
-        $this->line('  ' . ($isDryRun ? '⏭️' : '3') . '. Buat seeder admin (exam:seed-admin)');
-        $this->line('  ' . ($isDryRun ? '⏭️' : '4') . '. Jalankan migrasi database (migrate)');
+        $this->line('  ' . ($isDryRun ? '' : '1') . '. Verifikasi environment (forge:doctor)');
+        $this->line('  ' . ($isDryRun ? '' : '2') . '. Setup autentikasi (forge:auth)');
+        $this->line('  ' . ($isDryRun ? '' : '3') . '. Buat seeder admin (forge:seed-admin)');
+        $this->line('  ' . ($isDryRun ? '' : '4') . '. Jalankan migrasi database (migrate)');
         $this->newLine();
 
         // =============================================
@@ -69,14 +69,14 @@ class ExamInstallCommand extends Command
         $this->newLine();
 
         if ($isDryRun) {
-            $this->line('<fg=yellow>[DRY-RUN]</> Akan menjalankan: php artisan exam:doctor');
+            $this->line('<fg=yellow>[DRY-RUN]</> Akan menjalankan: php artisan forge:doctor');
             $this->line('  Memeriksa PHP version, .env, APP_KEY, database connection, dll.');
-            $this->addResult('Environment Check (exam:doctor)', '⏭️ Dry-run preview');
+            $this->addResult('Environment Check (forge:doctor)', 'Dry-run preview');
         } else {
-            $exitCode = $this->call('exam:doctor');
+            $exitCode = $this->call('forge:doctor');
             $this->addResult(
-                'Environment Check (exam:doctor)',
-                $exitCode === self::SUCCESS ? '✅ Passed' : '❌ Failed',
+                'Environment Check (forge:doctor)',
+                $exitCode === self::SUCCESS ? 'Passed' : 'Failed',
             );
         }
 
@@ -89,15 +89,15 @@ class ExamInstallCommand extends Command
         $this->newLine();
 
         if ($isDryRun) {
-            $this->line('<fg=yellow>[DRY-RUN]</> Akan menjalankan: php artisan exam:auth');
+            $this->line('<fg=yellow>[DRY-RUN]</> Akan menjalankan: php artisan forge:auth');
             $this->line('  Install API scaffolding, pilih JWT/Sanctum, generate AuthController, routes.');
-            $this->addResult('Authentication Setup (exam:auth)', '⏭️ Dry-run preview');
+            $this->addResult('Authentication Setup (forge:auth)', 'Dry-run preview');
         } else {
-            $this->call('exam:auth', [
+            $this->call('forge:auth', [
                 '--force'   => $force,
                 '--dry-run' => $isDryRun,
             ]);
-            $this->addResult('Authentication Setup (exam:auth)', '✅ Complete');
+            $this->addResult('Authentication Setup (forge:auth)', 'Complete');
         }
 
         $this->newLine();
@@ -109,15 +109,15 @@ class ExamInstallCommand extends Command
         $this->newLine();
 
         if ($isDryRun) {
-            $this->line('<fg=yellow>[DRY-RUN]</> Akan menjalankan: php artisan exam:seed-admin');
+            $this->line('<fg=yellow>[DRY-RUN]</> Akan menjalankan: php artisan forge:seed-admin');
             $this->line('  Generate AdminUserSeeder dengan email default dan register di DatabaseSeeder.');
-            $this->addResult('Admin Seeder (exam:seed-admin)', '⏭️ Dry-run preview');
+            $this->addResult('Admin Seeder (forge:seed-admin)', 'Dry-run preview');
         } else {
-            $this->call('exam:seed-admin', [
+            $this->call('forge:seed-admin', [
                 '--force'   => $force,
                 '--dry-run' => $isDryRun,
             ]);
-            $this->addResult('Admin Seeder (exam:seed-admin)', '✅ Complete');
+            $this->addResult('Admin Seeder (forge:seed-admin)', 'Complete');
         }
 
         $this->newLine();
@@ -131,14 +131,14 @@ class ExamInstallCommand extends Command
         if ($isDryRun) {
             $this->line('<fg=yellow>[DRY-RUN]</> Akan menjalankan: php artisan migrate');
             $this->line('  Menjalankan semua pending migration ke database.');
-            $this->addResult('Run Migrations (migrate)', '⏭️ Dry-run preview');
+            $this->addResult('Run Migrations (migrate)', 'Dry-run preview');
         } else {
             $exitCode = $this->call('migrate', [
                 '--force' => $force,
             ]);
             $this->addResult(
                 'Run Migrations (migrate)',
-                $exitCode === self::SUCCESS ? '✅ Complete' : '❌ Failed',
+                $exitCode === self::SUCCESS ? 'Complete' : 'Failed',
             );
         }
 
@@ -148,16 +148,16 @@ class ExamInstallCommand extends Command
         // =============================================
         // Summary Table
         // =============================================
-        $this->components->info('📋 Installation Summary');
+        $this->components->info('Installation Summary');
         $this->table(['Step', 'Status'], $this->results);
 
         $this->newLine();
 
         if ($isDryRun) {
-            $this->components->warn('⏭️ Dry-run complete — tidak ada perubahan yang benar-benar dilakukan.');
+            $this->components->warn('Dry-run complete — tidak ada perubahan yang benar-benar dilakukan.');
             $this->newLine();
             $this->info('Hilangkan opsi --dry-run untuk menjalankan instalasi sesungguhnya:');
-            $this->info('  php artisan exam:install');
+            $this->info('  php artisan forge:install');
 
             return self::SUCCESS;
         }
@@ -165,7 +165,7 @@ class ExamInstallCommand extends Command
         // =============================================
         // Next Steps
         // =============================================
-        $this->components->info('🎉 Instalasi selesai!');
+        $this->components->info('Instalasi selesai!');
         $this->newLine();
         $this->components->warn('Langkah selanjutnya:');
 
