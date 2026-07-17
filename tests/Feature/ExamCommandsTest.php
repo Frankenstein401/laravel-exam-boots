@@ -189,4 +189,53 @@ class ExamCommandsTest extends TestCase
         // Cleanup parent model
         File::delete($parentModelFile);
     }
+
+    public function test_it_does_not_delete_pre_existing_files_on_undo(): void
+    {
+        $preExistingFile = app_path('Models/PreExisting.php');
+        File::ensureDirectoryExists(dirname($preExistingFile));
+        
+        // Write initial content
+        File::put($preExistingFile, "<?php\n\n// Original Content\n");
+
+        // Run add command with --force (overwriting it)
+        $this->artisan('exam:add PreExisting --force')
+            ->expectsQuestion('Apakah fitur ini membutuhkan Auth Middleware?', false)
+            ->expectsChoice('Pilih tipe database operation:', 'Eloquent CRUD', ['Eloquent CRUD', 'Blank Service'])
+            ->assertSuccessful();
+
+        // Verify the file was modified/overwritten
+        $overwrittenContent = File::get($preExistingFile);
+        $this->assertStringContainsString('class PreExisting', $overwrittenContent);
+        $this->assertStringNotContainsString('// Original Content', $overwrittenContent);
+
+        // Get timestamp for undo prompt
+        $historyFile = storage_path('exam-boots/history.json');
+        $history = json_decode(File::get($historyFile), true);
+        $lastEntry = end($history);
+        $timestamp = $lastEntry['timestamp'];
+
+        // Run undo
+        $this->artisan('exam:undo')
+            ->expectsQuestion("Apakah Anda yakin ingin me-revert/undo operasi exam:add PreExisting ({$timestamp})?", true)
+            ->assertSuccessful();
+
+        // Verify the pre-existing file was RESTORED to original content, NOT DELETED!
+        $this->assertTrue(File::exists($preExistingFile));
+        $restoredContent = File::get($preExistingFile);
+        $this->assertStringContainsString('// Original Content', $restoredContent);
+        $this->assertStringNotContainsString('class PreExisting', $restoredContent);
+
+        // Cleanup
+        File::delete($preExistingFile);
+        
+        // Cleanup other generated files for PreExisting
+        File::delete(app_path('Http/Controllers/Api/PreExistingController.php'));
+        File::delete(app_path('Services/PreExistingService.php'));
+        File::delete(app_path('Http/Requests/PreExistingRequest.php'));
+        File::delete(app_path('Http/Resources/PreExistingResource.php'));
+        foreach (glob(database_path('migrations/*_create_pre_existings_table.php')) as $mFile) {
+            File::delete($mFile);
+        }
+    }
 }

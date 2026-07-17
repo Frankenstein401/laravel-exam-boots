@@ -94,15 +94,26 @@ trait TracksFileOperations
             return false;
         }
 
+        $existed = File::exists($path);
+
         if (! $this->confirmOverwrite($path)) {
             $this->components->warn("Skipped: " . basename($path));
             return false;
         }
 
+        if ($existed) {
+            $this->trackModify($path);
+        }
+
         File::ensureDirectoryExists(dirname($path));
         File::put($path, $content);
-        $this->trackCreate($path);
-        $this->components->info("Created: " . basename($path));
+
+        if (! $existed) {
+            $this->trackCreate($path);
+            $this->components->info("Created: " . basename($path));
+        } else {
+            $this->components->info("Modified: " . basename($path) . " (Overwritten)");
+        }
         return true;
     }
 
